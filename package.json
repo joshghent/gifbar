@@ -1,0 +1,31 @@
+{
+  "name": "@joshghent/giphy-bar",
+  "version": "1.0.0",
+  "description": "Mac Menu bar for getting giphy gifs!",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshghent/giphy-bar.git"
+  },
+  "keywords": [
+    "giphy",
+    "gif",
+    "bar",
+    "mac",
+    "osx",
+    "os",
+    "electron"
+  ],
+  "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joshghent/giphy-bar/issues"
+  },
+  "homepage": "https://github.com/joshghent/giphy-bar#readme",
+  "dependencies": {
+    "menubar": "5.2.3"
+  }
+}
