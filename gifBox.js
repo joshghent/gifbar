@@ -21,18 +21,21 @@ export default class GifBox extends React.Component {
 
 		giphy.trending().then((res) => {
 			this.setState({ gifs: res.data });
-			console.log(res);
 		})
 	}
 
-	onGifClick() {}
+	searchGifs(query) {
+		giphy.search(query).then((res) => {
+			this.setState({ gifs: res.data })
+		});
+	}
 
 	render() {
 		let content = null;
 		if (isEmpty(this.state.gifs)) {
 			content = <Spinner />
 		} else {
-			content = <GifList gifs={this.state.gifs}/>
+			content = <GifList gifs={this.state.gifs} onSearch={this.searchGifs.bind(this)}/>
 		}
 
 		return content;

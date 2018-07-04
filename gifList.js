@@ -1,8 +1,15 @@
 import React from 'react';
 import GifItem from './gifItem.js';
-import { map } from 'lodash';
+import { debounce, map } from 'lodash';
 
 export default class GifList extends React.Component {
+
+	onSearch(e) {
+		if (e.key === 'Enter') {
+			this.props.onSearch(e.target.value);
+		}
+	}
+
 	render() {
 		const gifNodes = map(this.props.gifs, (gif, index) => {
 			return (
@@ -13,9 +20,12 @@ export default class GifList extends React.Component {
 		})
 
 		return (
-			<ul className='gif-list'>
-				{gifNodes}
-			</ul>
+			<div>
+				<input onKeyPress={(e) => this.onSearch(e)} type='text'/>
+				<ul className='gif-list'>
+					{gifNodes}
+				</ul>
+			</div>
 		);
 	}
 }
