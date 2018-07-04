@@ -1,0 +1,51 @@
+{
+    "name": "@joshghent/giphy-bar",
+    "version": "1.0.0",
+	"description": "Mac Menu bar for getting giphy gifs!",
+    "main": "./dist/index.js",
+    "license": "MIT",
+    "private": false,
+    "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
+    "scripts": {
+        "start": "electron .",
+        "watch:electron": "parcel watch index.js --target=electron",
+        "watch:react": "parcel watch main.js --target=node",
+        "watch": "concurrently \"yarn watch:electron\" \"yarn watch:react\" "
+	},
+	"keywords": [
+		"giphy",
+		"gif",
+		"bar",
+		"mac",
+		"osx",
+		"os",
+		"electron"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/joshghent/giphy-bar.git"
+	},
+    "dependencies": {
+        "auto-launch": "^5.0.5",
+        "concurrently": "^3.5.1",
+        "dotenv": "^5.0.1",
+        "electron-debug": "2.0.0",
+        "giphy": "0.0.4",
+        "giphy-api": "1.2.7",
+        "lodash": "4.17.10",
+        "menubar": "^5.2.3",
+        "react-copy-to-clipboard": "5.0.1"
+    },
+    "peerDependencies": {
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0"
+    },
+    "devDependencies": {
+        "babel-preset-react": "^6.24.1",
+        "electron": "^1.8.3",
+        "parcel-bundler": "^1.6.2",
+        "prettier": "^1.11.1",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0"
+    }
+}
