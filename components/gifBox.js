@@ -17,18 +17,21 @@ export default class GifBox extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log("Made It!");
-
-		giphy.trending().then((res) => {
+		giphy.trending({ limit: 30 }).then((res) => {
 			this.setState({ gifs: res.data });
 		})
 	}
 
 	searchGifs(query) {
-		giphy.search(query).then((res) => {
-			this.setState({ gifs: res.data })
-			console.log(res.data);
-		});
+		if (query === '') {
+			giphy.trending({ limit: 30 }).then((res) => {
+				this.setState({ gifs: res.data });
+			})
+		} else {
+			giphy.search({ q: query, limit: 30 }).then((res) => {
+				this.setState({ gifs: res.data })
+			});
+		}
 	}
 
 	render() {

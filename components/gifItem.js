@@ -2,6 +2,7 @@ import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export default class GifItem extends React.Component {
+
 	render() {
 		const gif = this.props.gif;
 

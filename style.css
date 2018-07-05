@@ -1,5 +1,6 @@
 body {
 	margin: 0px;
+	overflow-x: hidden;
 }
 
 .search-input {
@@ -7,16 +8,21 @@ body {
 	width: 100%;
 	padding: 15px 7px;
 	font-size: 15px;
+	position: fixed;
 }
 
 .gif-list {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 10px;
 	grid-auto-rows: 75px;
+	padding-top: 50px;
 }
 
 .gif-item {
-	max-width: 50px;
-	max-height: 50px;
+	overflow: hidden;
+}
+
+.gif-item img {
+	width: 100% !important;
+	height: auto !important;
 }
