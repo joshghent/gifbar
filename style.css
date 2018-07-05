@@ -1,0 +1,22 @@
+body {
+	margin: 0px;
+}
+
+.search-input {
+	display: inline-block;
+	width: 100%;
+	padding: 15px 7px;
+	font-size: 15px;
+}
+
+.gif-list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 10px;
+	grid-auto-rows: 75px;
+}
+
+.gif-item {
+	max-width: 50px;
+	max-height: 50px;
+}

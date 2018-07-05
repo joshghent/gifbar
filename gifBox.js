@@ -27,6 +27,7 @@ export default class GifBox extends React.Component {
 	searchGifs(query) {
 		giphy.search(query).then((res) => {
 			this.setState({ gifs: res.data })
+			console.log(res.data);
 		});
 	}
 

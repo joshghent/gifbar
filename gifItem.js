@@ -8,7 +8,7 @@ export default class GifItem extends React.Component {
 		return (
 			<CopyToClipboard text={gif.images.original.url}>
 				<div className='gif-item'>
-					<img className='gif' src={gif.images.original.url}/>
+					<img className='gif' src={gif.images.fixed_width_small.url}/>
 				</div>
 			</CopyToClipboard>
 		)
