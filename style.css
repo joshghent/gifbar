@@ -20,9 +20,53 @@ body {
 
 .gif-item {
 	overflow: hidden;
+	position: relative;
 }
 
 .gif-item img {
 	width: 100% !important;
-	height: auto !important;
+	height: 75px;
+	position: absolute;
+}
+
+.copy-indication {
+	display: none;
+	color: white;
+	background-color: #0061ff;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+	position: relative;
+	font-family: sans-serif;
+	padding: 5px 0px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	animation: fadeIn 0.5s ease-out both;
+	z-index: 1;
+}
+
+.overlay {
+	background-color: transparent;
+	height: 100%;
+	width: 100%;
+	z-index: 0;
+	transition: background-color 0.5s linear;
+	position: relative;
+}
+
+.copied > .copy-indication {
+	display: block;
+}
+
+.copied > .overlay {
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+@keyframes fadeIn {
+	from {
+		transform: translate3d(0, -100%, 0);
+	}
+	to {
+		transform: translate3d(0,0,0);
+	}
 }

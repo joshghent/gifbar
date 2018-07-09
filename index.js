@@ -3,8 +3,6 @@ import AutoLaunch from 'auto-launch';
 import { Menu } from 'electron';
 import dotenv from 'dotenv';
 
-require('electron-debug')();
-
 dotenv.config();
 
 export const mb = menubar({
@@ -13,6 +11,7 @@ export const mb = menubar({
     height: 330,
 	width: 440,
 	alwaysOnTop: true,
+	icon: __dirname + '/../assets/gif-icon.png'
 });
 
 let appLauncher = new AutoLaunch({ name: process.env.APP_SLUG });
@@ -43,7 +42,7 @@ const contextMenu = Menu.buildFromTemplate([
 ]);
 
 mb.on('ready', () => {
-    console.log(`${process.env.APP_NAME} is Ready!!`);
+	console.log(`${process.env.APP_NAME} is Ready!!`);
     mb.tray.on('right-click', () => {
         mb.tray.popUpContextMenu(contextMenu);
     });

@@ -14,6 +14,7 @@ export default class GifList extends React.Component {
 			value: '',
 			typing: false,
 			typingTimeout: 0,
+			copied: null,
 		};
 	}
 
@@ -40,10 +41,14 @@ export default class GifList extends React.Component {
 		}
 	}
 
+	handleGifClick(gifId) {
+		this.setState({ copied: gifId })
+	}
+
 	render() {
 		const gifNodes = map(this.props.gifs, (gif, index) => {
 			return (
-				<GifItem gif={gif} key={index}/>
+				<GifItem gif={gif} key={index} gifId={index} onGifClick={(gifId) => this.handleGifClick(gifId)} isCopied={ this.state.copied === index }/>
 			);
 		})
 
