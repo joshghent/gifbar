@@ -1,6 +1,9 @@
 # GiphyBar
 A Mac Menu bar for getting giphy gif's in a mac menu bar application!
 
+## Demo
+![demo video](./demo.gif)
+
 ## Download
 Coming soon...
 

@@ -32,6 +32,7 @@ export default class GifList extends React.Component {
 
 	triggerSearch() {
 		const { value } = this.state;
+		this.setState({ copied: null });
 		this.props.onSearch(value);
 	}
 
@@ -55,6 +56,7 @@ export default class GifList extends React.Component {
 		return (
 			<div>
 				<input onKeyPress={this.handleKeyPress.bind(this)} onChange={this.handleChange} type='text' className='search-input' placeholder='🔍 Search GIFs'/>
+				<img src="./assets/giphy-mark.png" className="giphy-watermark"/>
 				<div className='gif-list'>
 					{gifNodes}
 				</div>

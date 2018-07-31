@@ -1,7 +1,7 @@
 import React from 'react';
 import Spinner from './spinner.js';
 import { isEmpty } from 'lodash';
-const giphy = require('giphy-api')(process.env.GIPHY_API)
+const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin')
 import dotenv from 'dotenv';
 import GifList from './GifList.js';
 
