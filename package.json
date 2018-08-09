@@ -1,8 +1,8 @@
 {
-    "name": "@joshghent/giphy-bar",
+    "name": "@joshghent/gifbar",
     "version": "1.0.0",
-    "description": "Mac Menu bar for getting giphy gifs!",
-    "main": "dist/index.js",
+    "description": "A Mac Menu bar for getting your favourite gifs URL to send to your friends",
+    "main": "index.js",
     "license": "MIT",
     "private": false,
     "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
@@ -12,10 +12,8 @@
         "watch:electron": "parcel watch index.js --target=electron",
         "watch:react": "parcel watch main.js --target=node",
         "watch": "concurrently \"npm watch:electron\" \"npm watch:react\" ",
-        "preelectron-pack": "npm run electron-dev",
-        "electron-pack": "build --em.main=dist/index.js",
-        "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-        "build": "parcel build index.js --target=electron && parcel build main.js --target=node"
+        "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
+        "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp"
     },
     "keywords": [
         "giphy",
@@ -39,12 +37,10 @@
         "giphy-api": "1.2.7",
         "lodash": "4.17.10",
         "menubar": "^5.2.3",
+        "react": "16.4.2",
         "react-copy-to-clipboard": "5.0.1",
+        "react-dom": "16.4.2",
         "react-loading": "2.0.2"
-    },
-    "peerDependencies": {
-        "react": "^16.4.1",
-        "react-dom": "^16.4.1"
     },
     "devDependencies": {
         "babel-preset-react": "^6.24.1",
@@ -52,8 +48,6 @@
         "electron-builder": "20.22.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
-        "react": "^16.4.1",
-        "react-dom": "^16.4.1",
         "wait-on": "2.1.0"
     },
     "build": {
