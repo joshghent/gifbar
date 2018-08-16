@@ -56,7 +56,7 @@ export default class GifList extends React.Component {
 		return (
 			<div>
 				<input onKeyPress={this.handleKeyPress.bind(this)} onChange={this.handleChange} type='text' className='search-input' placeholder='🔍 Search GIFs'/>
-				<img src="./assets/giphy-mark.png" className="giphy-watermark"/>
+				<img src="./../assets/giphy-mark.png" className="giphy-watermark"/>
 				<div className='gif-list'>
 					{gifNodes}
 				</div>
