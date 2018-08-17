@@ -1,13 +1,19 @@
-# GiphyBar
-A Mac Menu bar for getting giphy gif's in a mac menu bar application!
+<div align="center">
+	<img height="250" src="./assets/gif-original-full-size.png" alt="gifbar logo">
+	<h1><b>GifBar</b></h1>
+	<p><b>A Mac Menu bar for getting Gifs!</b></p>
+	</br>
+	</br>
+</div>
 
 ## Demo
 ![demo video](./demo.gif)
 
 ## Download
-Coming soon...
+See all releases [here](https://github.com/joshghent/gifbar/releases)
+There you can download the `.dmg` installer or the `.app` file
 
-## Running the app
+## Running the app locally
 
 ```shell
 $ yarn start
@@ -28,4 +34,14 @@ $ yarn watch:electron
 _React_
 ```shell
 $ yarn watch:react
+```
+
+_Create DMG_
+```shell
+$ yarn run package-dmg
+```
+
+_Create App_
+```shell
+$ yarn run package
 ```
