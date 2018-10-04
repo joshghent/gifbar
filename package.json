@@ -39,29 +39,29 @@
     },
     "dependencies": {
         "auto-launch": "^5.0.5",
-        "concurrently": "3.6.0",
+        "concurrently": "4.0.1",
         "dotenv": "^6.0.0",
         "electron-debug": "2.0.0",
         "giphy": "0.0.4",
         "giphy-api": "1.2.7",
-        "lodash": "4.17.10",
+        "lodash": "4.17.11",
         "menubar": "^5.2.3",
-        "react": "16.4.2",
+        "react": "16.5.2",
         "react-copy-to-clipboard": "5.0.1",
-        "react-dom": "16.4.2",
-        "react-loading": "2.0.2"
+        "react-dom": "16.5.2",
+        "react-loading": "2.0.3"
     },
     "devDependencies": {
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
-        "electron": "^2.0.8",
-        "electron-builder": "20.22.0",
+        "electron": "^3.0.2",
+        "electron-builder": "20.28.4",
         "enzyme": "^3.6.0",
         "enzyme-adapter-react-16": "^1.5.0",
         "jest": "^23.6.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
-        "wait-on": "2.1.0"
+        "wait-on": "3.1.0"
     },
     "build": {
         "appId": "com.joshghent.gifbar",
