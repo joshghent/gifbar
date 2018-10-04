@@ -1,17 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import GifItem from './gifItem';
-
-const mockGif = {
-  images: {
-    original: {
-      url: 'image-url'
-    },
-    fixed_width_small: {
-      url: 'image-small-width-url'
-    }
-  }
-};
+import { mockGifs } from '../__mocks__/dataMocks';
 
 const mockGifId = 0;
 
@@ -22,7 +12,7 @@ beforeEach(() => {
   mockOnGifClick = jest.fn();
   GifItemWrapper = (
     <GifItem
-      gif={mockGif}
+      gif={mockGifs[0]}
       gifId={mockGifId}
       onGifClick={mockOnGifClick}
       isCopied={false}
