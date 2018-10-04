@@ -13,8 +13,16 @@
         "watch:react": "parcel watch main.js --target=node",
         "watch": "concurrently \"npm watch:electron\" \"npm watch:react\" ",
         "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
-		"package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
-		"package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller"
+        "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
+        "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
+        "test": "jest --env=jsdom --coverage --colors",
+        "test:watch": "jest --env=jsdom --colors --watchAll"
+    },
+    "jest": {
+        "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
+        "collectCoverageFrom": [
+            "components/**/*.{js,jsx}"
+        ]
     },
     "keywords": [
         "giphy",
@@ -44,9 +52,13 @@
         "react-loading": "2.0.2"
     },
     "devDependencies": {
+        "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
         "electron": "^2.0.4",
         "electron-builder": "20.22.0",
+        "enzyme": "^3.6.0",
+        "enzyme-adapter-react-16": "^1.5.0",
+        "jest": "^23.6.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
         "wait-on": "2.1.0"
@@ -64,8 +76,8 @@
         },
         "files": [
             "dist/**/*",
-			"node_modules/**/*",
-			"assets/*"
+            "node_modules/**/*",
+            "assets/*"
         ]
     }
 }
