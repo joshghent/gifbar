@@ -7,6 +7,9 @@
 </div>
 
 ## Demo
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/joshghent/gifbar.svg)](https://greenkeeper.io/)
+
 ![demo video](./demo.gif)
 
 ## Download
