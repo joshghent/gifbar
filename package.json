@@ -15,7 +15,8 @@
         "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
         "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
         "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
-        "test": "jest --env=jsdom --coverage --colors"
+        "test": "jest --env=jsdom --coverage --colors",
+        "test:watch": "jest --env=jsdom --coverage --colors --watchAll"
     },
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
