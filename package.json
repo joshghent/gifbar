@@ -45,7 +45,7 @@
     },
     "devDependencies": {
         "babel-preset-react": "^6.24.1",
-        "electron": "^2.0.4",
+        "electron": "^2.0.8",
         "electron-builder": "20.22.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
