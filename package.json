@@ -50,6 +50,7 @@
         "react-loading": "2.0.2"
     },
     "devDependencies": {
+        "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
         "electron": "^2.0.4",
         "electron-builder": "20.22.0",
