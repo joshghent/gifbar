@@ -7,7 +7,7 @@
     "private": false,
     "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
     "scripts": {
-        "prestart": "npm run build",
+        "prestart": "yarn run",
         "start": "electron .",
         "watch:electron": "parcel watch index.js --target=electron",
         "watch:react": "parcel watch main.js --target=node",
