@@ -9,6 +9,7 @@
 ## Demo
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/joshghent/gifbar.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/joshghent/gifbar.svg?branch=master)](https://travis-ci.org/joshghent/gifbar)
 
 ![demo video](./demo.gif)
 
