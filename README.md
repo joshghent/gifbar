@@ -8,7 +8,7 @@
 
 ## Demo
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/joshghent/gifbar.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.com/sidhyatikku/rick.svg?branch=master)](https://travis-ci.com/willany/gifbar)
+[![Greenkeeper badge](https://badges.greenkeeper.io/joshghent/gifbar.svg)](https://greenkeeper.io/) [![Build Status](https://travis-ci.com/willany/gifbar.svg?branch=master)](https://travis-ci.com/willany/gifbar)
 
 ![demo video](./demo.gif)
 
