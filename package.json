@@ -39,7 +39,7 @@
     },
     "dependencies": {
         "auto-launch": "^5.0.5",
-        "concurrently": "4.0.1",
+        "concurrently": "4.1.0",
         "dotenv": "^6.0.0",
         "electron-debug": "2.0.0",
         "giphy": "0.0.4",
