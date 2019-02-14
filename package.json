@@ -48,7 +48,7 @@
         "menubar": "^5.2.3",
         "react": "16.8.2",
         "react-copy-to-clipboard": "5.0.1",
-        "react-dom": "16.7.0",
+        "react-dom": "16.8.2",
         "react-loading": "2.0.3"
     },
     "devDependencies": {
