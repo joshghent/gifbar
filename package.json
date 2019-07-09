@@ -44,7 +44,7 @@
         "electron-debug": "2.0.0",
         "giphy": "0.0.4",
         "giphy-api": "2.0.1",
-        "lodash": "4.17.11",
+        "lodash": "4.17.12",
         "menubar": "^5.2.3",
         "react": "16.8.3",
         "react-copy-to-clipboard": "5.0.1",
