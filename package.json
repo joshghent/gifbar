@@ -71,6 +71,12 @@
             "icon": "icon.icns",
             "type": "development"
         },
+
+        "win": {
+            "icon" : "icon.icns",
+            "target": "nsis"
+          },
+          
         "directories": {
             "buildResources": "assets"
         },
