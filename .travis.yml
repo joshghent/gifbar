@@ -1,6 +1,5 @@
 language: node_js
 node_js:
-  - "node"
   - "lts/*"
 notifications:
   slack: ghentspace:ZLT8kfb3r2v5M0iY2gCN62dd
