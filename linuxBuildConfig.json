@@ -1,0 +1,8 @@
+{
+    "src": "dist/GifBar-linux-x64/",
+    "arch": "amd64",
+    "dest": "dist/installers/",
+    "bin": "GifBar",
+    "name": "GifBar",
+    "productName": "GifBar"
+  }
