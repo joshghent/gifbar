@@ -17,7 +17,9 @@
         "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
         "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
         "test": "jest --env=jsdom --coverage --colors",
-        "test:watch": "jest --env=jsdom --colors --watchAll"
+        "test:watch": "jest --env=jsdom --colors --watchAll",
+        "lint": "./node_modules/.bin/eslint .",
+        "lint-fix": "./node_modules/.bin/eslint . --fix"
     },
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
