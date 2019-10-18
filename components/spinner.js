@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactLoading from 'react-loading';
+import React from "react";
+import ReactLoading from "react-loading";
 
 export default class Spinner extends React.Component {
 	render() {

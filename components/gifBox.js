@@ -1,11 +1,11 @@
-import React from 'react';
-import Spinner from './spinner.js';
-import { isEmpty } from 'lodash';
-import dotenv from 'dotenv';
-import GifList from './gifList.js';
+import React from "react";
+import Spinner from "./spinner.js";
+import { isEmpty } from "lodash";
+import dotenv from "dotenv";
+import GifList from "./gifList.js";
 
-const GifProviderWrapper = require('../lib/GifProvider/GifProviderWrapper');
-const { getProviders } = require('../lib/GifProvider/GifProviderFactory');
+const GifProviderWrapper = require("../lib/GifProvider/GifProviderWrapper");
+const { getProviders } = require("../lib/GifProvider/GifProviderFactory");
 
 const gifProvider = new GifProviderWrapper(getProviders([ "giphy" ]));
 
@@ -21,19 +21,19 @@ export default class GifBox extends React.Component {
 	}
 
 	componentDidMount() {
-		gifProvider.trending({ limit: 30 }).then((res) => {
+		gifProvider.trending(30).then((res) => {
 			this.setState({ gifs: res.data });
-		})
+		});
 	}
 
 	searchGifs(query) {
-		if (query === '') {
-			gifProvider.trending({ limit: 30 }).then((res) => {
+		if (query === "") {
+			gifProvider.trending(30).then((res) => {
 				this.setState({ gifs: res.data });
-			})
+			});
 		} else {
-			gifProvider.search({ q: query, limit: 30 }).then((res) => {
-				this.setState({ gifs: res.data })
+			gifProvider.search(query, 30).then((res) => {
+				this.setState({ gifs: res.data });
 			});
 		}
 	}
@@ -41,9 +41,9 @@ export default class GifBox extends React.Component {
 	render() {
 		let content = null;
 		if (isEmpty(this.state.gifs)) {
-			content = <Spinner />
+			content = <Spinner />;
 		} else {
-			content = <GifList gifs={this.state.gifs} onSearch={this.searchGifs.bind(this)}/>
+			content = <GifList gifs={this.state.gifs} onSearch={this.searchGifs.bind(this)}/>;
 		}
 
 		return content;

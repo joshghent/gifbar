@@ -1,6 +1,6 @@
-import React from 'react';
-import GifItem from './gifItem.js';
-import { map } from 'lodash';
+import React from "react";
+import GifItem from "./gifItem.js";
+import { map } from "lodash";
 
 const WAIT_INTERVAL = 1000;
 
@@ -11,7 +11,7 @@ export default class GifList extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 
 		this.state = {
-			value: '',
+			value: "",
 			typing: false,
 			typingTimeout: 0,
 			copied: null,
@@ -26,8 +26,8 @@ export default class GifList extends React.Component {
 		this.setState({
 			value: e.target.value,
 			typing: false,
-			typingTimeout: setTimeout(() => { this.triggerSearch() }, WAIT_INTERVAL),
-		})
+			typingTimeout: setTimeout(() => { this.triggerSearch(); }, WAIT_INTERVAL),
+		});
 	}
 
 	triggerSearch() {
@@ -37,13 +37,13 @@ export default class GifList extends React.Component {
 	}
 
 	handleKeyPress(e) {
-		if (e.key === 'Enter') {
+		if (e.key === "Enter") {
 			this.triggerSearch();
 		}
 	}
 
 	handleGifClick(gifId) {
-		this.setState({ copied: gifId })
+		this.setState({ copied: gifId });
 	}
 
 	render() {
@@ -51,7 +51,7 @@ export default class GifList extends React.Component {
 			return (
 				<GifItem gif={gif} key={index} gifId={index} onGifClick={(gifId) => this.handleGifClick(gifId)} isCopied={ this.state.copied === index }/>
 			);
-		})
+		});
 
 		return (
 			<div>

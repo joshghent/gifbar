@@ -63,6 +63,8 @@
         "electron-packager": "^14.0.6",
         "enzyme": "^3.6.0",
         "enzyme-adapter-react-16": "^1.5.0",
+        "eslint": "^6.5.1",
+        "eslint-plugin-react": "^7.16.0",
         "jest": "^23.6.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
