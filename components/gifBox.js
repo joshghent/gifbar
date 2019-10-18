@@ -1,9 +1,13 @@
 import React from 'react';
 import Spinner from './spinner.js';
 import { isEmpty } from 'lodash';
-const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin')
 import dotenv from 'dotenv';
 import GifList from './gifList.js';
+
+const GifProviderWrapper = require('../lib/GifProvider/GifProviderWrapper');
+const { getProviders } = require('../lib/GifProvider/GifProviderFactory');
+
+const gifProvider = new GifProviderWrapper(getProviders([ "giphy" ]));
 
 dotenv.config();
 
@@ -17,18 +21,18 @@ export default class GifBox extends React.Component {
 	}
 
 	componentDidMount() {
-		giphy.trending({ limit: 30 }).then((res) => {
+		gifProvider.trending({ limit: 30 }).then((res) => {
 			this.setState({ gifs: res.data });
 		})
 	}
 
 	searchGifs(query) {
 		if (query === '') {
-			giphy.trending({ limit: 30 }).then((res) => {
+			gifProvider.trending({ limit: 30 }).then((res) => {
 				this.setState({ gifs: res.data });
 			})
 		} else {
-			giphy.search({ q: query, limit: 30 }).then((res) => {
+			gifProvider.search({ q: query, limit: 30 }).then((res) => {
 				this.setState({ gifs: res.data })
 			});
 		}

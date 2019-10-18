@@ -22,7 +22,8 @@
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
         "collectCoverageFrom": [
-            "components/**/*.{js,jsx}"
+            "components/**/*.{js,jsx}",
+            "lib/**/*.{js,jsx}"
         ]
     },
     "keywords": [
@@ -40,6 +41,7 @@
     },
     "dependencies": {
         "auto-launch": "^5.0.5",
+        "bluebird": "^3.7.1",
         "concurrently": "4.1.0",
         "dotenv": "^8.2.0",
         "electron-debug": "2.0.0",
@@ -79,6 +81,7 @@
         },
         "files": [
             "dist/**/*",
+            "lib/**/*",
             "node_modules/**/*",
             "assets/*"
         ]
