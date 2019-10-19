@@ -3,7 +3,7 @@ import Spinner from './spinner.js';
 import { isEmpty } from 'lodash';
 import dotenv from 'dotenv';
 import GifList from './gifList.js';
-const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
+const giphy = require("giphy-api")("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
 
 dotenv.config();
 const WAIT_INTERVAL = 1000;
@@ -13,7 +13,7 @@ export default class GifBox extends React.Component {
 		super(props);
 
 		this.state = {
-			value         : '',
+			value         : "",
 			copied        : null,
 			typing        : false,
 			typingTimeout : 0,
@@ -46,7 +46,9 @@ export default class GifBox extends React.Component {
 	}
 
 	handleKeyPress(e) {
-		if (e.key === 'Enter') this.triggerSearch();
+		if (e.key === "Enter") {
+			this.triggerSearch();
+		}
 	}
 
 	triggerSearch() {
