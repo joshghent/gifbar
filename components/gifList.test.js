@@ -13,8 +13,8 @@ beforeEach(() => {
 
 it("Copies gif on gif click", () => {
   const wrapper = shallow(GifListWrapper);
-  expect(wrapper.instance().props.copied).toBeNull();
+  expect(wrapper.instance().state.copied).toBeNull();
   const gifItem = wrapper.find('GifItem').filterWhere(n => n.props().gifId === 0);
   gifItem.simulate('gifClick', 0);
-  expect(wrapper.instance().props.copied).toBe(0);
+  expect(wrapper.instance().state.copied).toBe(0);
 });
