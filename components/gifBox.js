@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import Spinner from './spinner.js';
 import { isEmpty } from 'lodash';
-const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
 import dotenv from 'dotenv';
 import GifList from './gifList.js';
+const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
 
 dotenv.config();
 const WAIT_INTERVAL = 1000;
