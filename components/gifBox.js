@@ -4,9 +4,12 @@ import { isEmpty } from "lodash";
 import dotenv from "dotenv";
 import GifList from "./gifList.js";
 
-import {GiphyGifProvider} from "@jych/gif-provider";
+import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
 
-const gifProvider = new GiphyGifProvider("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
+// todo the API keys should not be in the git repo
+const giphyGifProvider = new GiphyGifProvider("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
+const tenorGifProvider = new TenorGifProvider("Y91ZIZBKZ3DL");
+const gifProvider = new CompositeGifProvider([ giphyGifProvider, tenorGifProvider ]);
 
 dotenv.config();
 
