@@ -35,7 +35,7 @@ export default class GifBox extends React.Component {
 			})
 		} else {
 			gifProvider.search(query, 30).then((gifs) => {
-				this.setState({ gifs })
+				this.setState({ gifs });
 			});
 		}
 	}
