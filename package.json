@@ -39,12 +39,11 @@
         "url": "git+https://github.com/joshghent/giphy-bar.git"
     },
     "dependencies": {
+        "@jych/gif-provider": "^0.4.0",
         "auto-launch": "^5.0.5",
         "concurrently": "4.1.0",
         "dotenv": "^8.2.0",
         "electron-debug": "2.0.0",
-        "giphy": "0.0.4",
-        "giphy-api": "2.0.1",
         "lodash": "4.17.11",
         "menubar": "^5.2.3",
         "react": "16.8.3",
