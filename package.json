@@ -17,7 +17,8 @@
         "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
         "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
         "test": "jest --env=jsdom --coverage --colors",
-        "test:watch": "jest --env=jsdom --colors --watchAll"
+        "test:watch": "jest --env=jsdom --colors --watchAll",
+        "bundlesize": "bundlesize"
     },
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
@@ -56,6 +57,7 @@
     "devDependencies": {
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
+        "bundlesize": "^0.18.0",
         "electron": "^4.0.0",
         "electron-builder": "20.43.0",
         "electron-installer-debian": "^2.0.1",
