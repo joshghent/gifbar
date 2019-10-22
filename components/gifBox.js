@@ -1,9 +1,15 @@
-import React from 'react';
-import Spinner from './spinner.js';
-import { isEmpty } from 'lodash';
-const giphy = require('giphy-api')('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin')
-import dotenv from 'dotenv';
-import GifList from './gifList.js';
+import React from "react";
+import Spinner from "./spinner.js";
+import { isEmpty } from "lodash";
+import dotenv from "dotenv";
+import GifList from "./gifList.js";
+
+import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
+
+// todo the API keys should not be in the git repo
+const giphyGifProvider = new GiphyGifProvider("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
+const tenorGifProvider = new TenorGifProvider("Y91ZIZBKZ3DL");
+const gifProvider = new CompositeGifProvider([ giphyGifProvider, tenorGifProvider ]);
 
 dotenv.config();
 
@@ -12,24 +18,24 @@ export default class GifBox extends React.Component {
 		super(props);
 
 		this.state = {
-			gifs: [],
+			gifs: [], // an array of Gifs (from gif-provider)
 		};
 	}
 
 	componentDidMount() {
-		giphy.trending({ limit: 30 }).then((res) => {
-			this.setState({ gifs: res.data });
+		gifProvider.trending(30).then((gifs) => {
+			this.setState({ gifs });
 		})
 	}
 
 	searchGifs(query) {
-		if (query === '') {
-			giphy.trending({ limit: 30 }).then((res) => {
-				this.setState({ gifs: res.data });
+		if (query === "") {
+			gifProvider.trending(30).then((gifs) => {
+				this.setState({ gifs });
 			})
 		} else {
-			giphy.search({ q: query, limit: 30 }).then((res) => {
-				this.setState({ gifs: res.data })
+			gifProvider.search(query, 30).then((gifs) => {
+				this.setState({ gifs });
 			});
 		}
 	}
