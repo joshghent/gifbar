@@ -68,3 +68,6 @@ dist/
 GifBarApp/
 
 GifBar.dmg
+
+# IntelliJ user files
+.idea/
