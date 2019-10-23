@@ -1,7 +1,7 @@
 
 import React from "react";
 import Spinner from "./spinner.js";
-import { isEmpty } from "lodash";
+import isEmpty  from "lodash.isEmpty";
 import dotenv from "dotenv";
 import GifList from "./gifList.js";
 

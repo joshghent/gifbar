@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "node"
+  - "lts/*"
 branches: 
   only: 
     -master  
@@ -9,4 +9,4 @@ notifications:
   slack: ghentspace:ZLT8kfb3r2v5M0iY2gCN62dd
 
 script:
-  - yarn lint
+  - npm run lint

@@ -44,10 +44,9 @@
         "auto-launch": "^5.0.5",
         "concurrently": "4.1.0",
         "dotenv": "^8.2.0",
-        "electron-debug": "2.0.0",
-        "giphy": "0.0.4",
-        "giphy-api": "2.0.1",
-        "lodash": "4.17.11",
+        "giphy-api": "^2.0.1",
+        "lodash.isempty": "^4.4.0",
+        "lodash.map": "^4.6.0",
         "menubar": "^5.2.3",
         "react": "16.11.0",
         "react-copy-to-clipboard": "5.0.1",
@@ -55,6 +54,7 @@
         "react-loading": "2.0.3"
     },
     "devDependencies": {
+        "babel-core": "^6.26.3",
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
         "bundlesize": "^0.18.0",
@@ -71,6 +71,7 @@
         "eslint-plugin-react": "^7.16.0",
         "eslint-plugin-react-hooks": "^1.7.0",
         "jest": "^23.6.0",
+        "node-pty": "^0.10.0-beta1",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
         "wait-on": "3.2.0"
