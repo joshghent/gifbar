@@ -17,7 +17,8 @@
         "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
         "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
         "test": "jest --env=jsdom --coverage --colors",
-        "test:watch": "jest --env=jsdom --colors --watchAll"
+        "test:watch": "jest --env=jsdom --colors --watchAll",
+        "bundlesize": "bundlesize"
     },
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
@@ -39,6 +40,7 @@
         "url": "git+https://github.com/joshghent/giphy-bar.git"
     },
     "dependencies": {
+        "@jych/gif-provider": "^0.5.0",
         "auto-launch": "^5.0.5",
         "concurrently": "4.1.0",
         "dotenv": "^8.2.0",
@@ -47,20 +49,27 @@
         "giphy-api": "2.0.1",
         "lodash": "4.17.11",
         "menubar": "^5.2.3",
-        "react": "16.8.3",
+        "react": "16.11.0",
         "react-copy-to-clipboard": "5.0.1",
-        "react-dom": "16.8.3",
+        "react-dom": "16.11.0",
         "react-loading": "2.0.3"
     },
     "devDependencies": {
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
+        "bundlesize": "^0.18.0",
         "electron": "^4.0.0",
         "electron-builder": "20.43.0",
         "electron-installer-debian": "^2.0.1",
         "electron-packager": "^14.0.6",
         "enzyme": "^3.6.0",
         "enzyme-adapter-react-16": "^1.5.0",
+        "eslint": "^6.5.1",
+        "eslint-config-airbnb": "^18.0.1",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-react": "^7.16.0",
+        "eslint-plugin-react-hooks": "^1.7.0",
         "jest": "^23.6.0",
         "parcel-bundler": "^1.9.6",
         "prettier": "^1.13.7",
