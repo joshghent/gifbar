@@ -1,6 +1,6 @@
 import React from 'react';
 import GifItem from './gifItem.js';
-import { map } from 'lodash';
+import  map from 'lodash.map';
 
 export default class GifList extends React.Component {
 	constructor(props) {
