@@ -14,8 +14,8 @@
 ![demo video](./demo.gif)
 
 ## Download
-See all releases [here](https://github.com/joshghent/gifbar/releases)
-There you can download the `.dmg` installer or the `.app` file
+See all releases [here](https://github.com/joshghent/gifbar/releases).
+There, you can download the `.dmg` installer or the `.app` file
 
 ## Running the app locally
 
