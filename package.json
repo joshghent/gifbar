@@ -58,7 +58,7 @@
         "babel-preset-env": "^1.7.0",
         "babel-preset-react": "^6.24.1",
         "bundlesize": "^0.18.0",
-        "electron": "^4.0.0",
+        "electron": "^7.0.1",
         "electron-builder": "22.1.0",
         "electron-installer-debian": "^2.0.1",
         "electron-packager": "^14.0.6",
