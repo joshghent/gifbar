@@ -1,4 +1,4 @@
-import menubar from 'menubar';
+import { menubar } from 'menubar';
 import AutoLaunch from 'auto-launch';
 import { Menu } from 'electron';
 
