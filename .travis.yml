@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - "lts/*"
-branches: 
-  only: 
-    -master  
+  - "13"
+
+script:
+  - yarn lint
+  - yarn test
+  - yarn audit
+  - yarn run bundlesize
 
 notifications:
   slack: ghentspace:ZLT8kfb3r2v5M0iY2gCN62dd
-
-script:
-  - npm run lint
