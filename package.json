@@ -60,7 +60,7 @@
         "bundlesize": "^0.18.0",
         "electron": "^7.0.1",
         "electron-builder": "22.2.0",
-        "electron-installer-debian": "^2.0.1",
+        "electron-installer-debian": "^3.0.0",
         "electron-packager": "^14.0.6",
         "enzyme": "^3.6.0",
         "enzyme-adapter-react-16": "^1.5.0",
