@@ -3,12 +3,12 @@ const {
 } = require('electron');
 
 const isMac = /darwin/.test(process.platform);
-const menubar = require('menubar');
+const { menubar } = require('menubar');
 const isDev = require('electron-is-dev');
 const path = require('path');
 
 const mb = menubar({
-  dir: path.join(__dirname, '/app'),
+  dir: path.join(__dirname, '/'),
   width: 440,
   height: 330,
   icon: path.join(__dirname, '/../assets/gif-icon.png'),

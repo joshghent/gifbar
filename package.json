@@ -11,7 +11,7 @@
     "watch:electron": "parcel watch index.js --target=electron",
     "watch:react": "parcel watch main.js --target=node",
     "watch": "concurrently \"yarn watch:electron\" \"yarn watch:react\" ",
-    "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
+    "build": "parcel build index.js --target=electron && parcel build index.html --public-url .",
     "build-linux": "electron-packager . GifBar --platform=linux --arch x64 --out dist/ --executableName=GifBar && electron-installer-debian --config linuxBuildConfig.json",
     "package": "electron-packager . GifBar --platform=darwin --arch=x64 --icon=icon.icns --overwrite --out=GifBarApp",
     "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
