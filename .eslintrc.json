@@ -22,5 +22,170 @@
         "react"
     ],
     "rules": {
+        "await-promise": true,
+        "no-floating-promises": true,
+        "no-shadowed-variable": false,
+        "arrow-return-shorthand": true,
+        "array-type": [
+            true,
+            "array"
+        ],
+        "callable-types": true,
+        "class-name": true,
+        "comment-format": [
+            true,
+            "check-space"
+        ],
+        "curly": true,
+        "deprecation": {
+            "severity": "warn"
+        },
+        "eofline": true,
+        "forin": false,
+        "import-blacklist": [
+            true,
+            "rxjs/Rx"
+        ],
+        "import-spacing": true,
+        "ordered-imports": false,
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "interface-name": [
+            true,
+            "never-prefix"
+        ],
+        "interface-over-type-literal": false,
+        "label-position": true,
+        "max-classes-per-file": false,
+        "max-union-size": false,
+        "max-line-length": [
+            true,
+            140
+        ],
+        "member-access": false,
+        "member-ordering": [
+            true,
+            {
+                "order": [
+                    "static-field",
+                    "instance-field",
+                    "instance-method",
+                    "static-method"
+                ]
+            }
+        ],
+        "no-arg": true,
+        "no-bitwise": true,
+        "no-console": [
+            true,
+            "debug",
+            "info",
+            "time",
+            "timeEnd",
+            "trace"
+        ],
+        "no-construct": true,
+        "no-debugger": true,
+        "no-duplicate-string": false,
+        "no-default-export": true,
+        "no-duplicate-super": true,
+        "no-empty": false,
+        "no-empty-interface": true,
+        "no-eval": true,
+        "no-inferrable-types": [
+            true,
+            "ignore-params"
+        ],
+        "space-within-parens": [
+            false,
+            1
+        ],
+        "space-before-function-paren": false,
+        "no-misused-new": true,
+        "no-non-null-assertion": false,
+        "no-string-literal": false,
+        "no-string-throw": true,
+        "no-switch-case-fall-through": true,
+        "no-trailing-whitespace": true,
+        "no-unnecessary-initializer": true,
+        "no-unused-expression": true,
+        "no-use-before-declare": true,
+        "no-var-keyword": true,
+        "object-literal-sort-keys": false,
+        "object-literal-key-quotes": [
+            true,
+            "as-needed"
+        ],
+        "one-line": [
+            true,
+            "check-open-brace",
+            "check-catch",
+            "check-else",
+            "check-whitespace"
+        ],
+        "prefer-const": true,
+        "prefer-for-of": false,
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double"
+        ],
+        "radix": true,
+        "semicolon": [
+            true,
+            "always"
+        ],
+        "triple-equals": [
+            true,
+            "allow-null-check"
+        ],
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            }
+        ],
+        "unified-signatures": true,
+        "variable-name": false,
+        "no-irregular-whitespace": true,
+        "no-magic-numbers": false,
+        "whitespace": [
+            true,
+            "check-typecast",
+            "check-type-operator",
+            "check-module",
+            "check-branch",
+            "check-decl",
+            "check-rest-spread",
+            "check-operator",
+            "check-separator",
+            "check-type",
+            "check-preblock"
+        ],
+        "jsx-no-multiline-js": false,
+        "jsx-equals-spacing": [
+            true,
+            "never"
+        ],
+        "jsx-curly-spacing": [
+            true,
+            "always"
+        ],
+        "jsx-alignment": true,
+        "jsx-no-bind": true,
+        "jsx-key": true,
+        "jsx-no-lambda": false,
+        "jsx-wrap-multiline": false,
+        "jsx-self-close": true,
+        "jsx-no-string-ref": true,
+        "jsx-space-before-trailing-slash": false,
+        "react-hooks-nesting": "error"
     }
 }
