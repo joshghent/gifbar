@@ -1,113 +1,69 @@
+import React, {useEffect, useState} from 'react';
+import dotenv from 'dotenv';
+import {CompositeGifProvider, GiphyGifProvider, TenorGifProvider} from '@jych/gif-provider';
 
-import React from "react";
-import Spinner from "./spinner.js";
-import isEmpty  from "lodash.isEmpty";
-import dotenv from "dotenv";
-import GifList from "./gifList.js";
-
-import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
+import Spinner from './spinner';
+import {useDebounce} from '../tools/customHooks';
+import {GifList} from './gifList';
 
 // todo the API keys should not be in the git repo
-const giphyGifProvider = new GiphyGifProvider("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
-const tenorGifProvider = new TenorGifProvider("Y91ZIZBKZ3DL");
-const gifProvider = new CompositeGifProvider([ giphyGifProvider, tenorGifProvider ]);
+const giphyGifProvider = new GiphyGifProvider('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
+const tenorGifProvider = new TenorGifProvider('Y91ZIZBKZ3DL');
+const gifProvider = new CompositeGifProvider([giphyGifProvider, tenorGifProvider]);
 
 dotenv.config();
 const WAIT_INTERVAL = 1000;
 
-export default class GifBox extends React.Component {
-	constructor(props) {
-		super(props);
+export const GifBox = () => {
+    const [search, setSearch] = useState('');
+    const [copied, setCopied] = useState(null);
+    const [gifs, setGifs] = useState([]);
 
-		this.state = {
-			value         : "",
-			copied        : null,
-			typing        : false,
-			typingTimeout : 0,
-			gifs          : [], // an array of Gifs (from gif-provider)
-		};
+    const debouncedSearch = useDebounce(search, WAIT_INTERVAL);
 
-		this.searchGifs = this.searchGifs.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.triggerSearch = this.triggerSearch.bind(this);
-		this.handleGifClick = this.handleGifClick.bind(this);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
-	}
+    const triggerSearch = (searchValue) => {
+        setCopied(null);
 
-	handleGifClick(gifId) {
-		this.setState({ copied: gifId });
-	}
+        if(!searchValue) {
+            gifProvider.trending(30).then(setGifs);
+        } else {
+            gifProvider.search(searchValue, 30).then(setGifs);
+        }
+    };
 
-	handleChange(e) {
-		if (this.state.typingTimeout) {
-			clearTimeout(this.state.typingTimeout);
-		}
+    useEffect(() => {
 
-		this.setState({
-			value         : e.target.value,
-			typing        : false,
-			typingTimeout : setTimeout(() => {
-				this.triggerSearch();
-			}, WAIT_INTERVAL)
-		});
-	}
+        triggerSearch(debouncedSearch);
+    }, [debouncedSearch]);
 
-	handleKeyPress(e) {
-		if (e.key === "Enter") {
-			this.triggerSearch();
-		}
-	}
 
-	triggerSearch() {
-		const { value } = this.state;
-		this.setState({ copied: null });
-		this.searchGifs(value);
-	}
+    const handleSearchChange = (e) =>
+        setSearch(e.target.value);
 
-	searchGifs(query) {
-		if (query === "") {
-			gifProvider.trending(30).then((gifs) => {
-				this.setState({ gifs });
-			})
-		} else {
-			gifProvider.search(query, 30).then((gifs) => {
-				this.setState({ gifs });
-			});
-		}
-	}
-        
-  componentDidMount() {
-		gifProvider.trending(30).then((gifs) => {
-			this.setState({ gifs });
-		})
-	}
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            triggerSearch(search); // force triggering search with not debounced search value
+        }
+    };
 
-	render() {
-		let content = null;
-		if (isEmpty(this.state.gifs)) {
-			content = <Spinner />;
-		} else {
-			content = (
-				<GifList
-					gifs={this.state.gifs}
-					copied={this.state.copied}
-					onSearch={this.searchGifs}
-					handleGifClick={this.handleGifClick}
-				/>
-			);
-		}
+    const content = gifs ? (
+        <GifList
+            gifs={gifs}
+            copied={copied}
+            handleGifClick={setCopied}
+        />
+    ) : <Spinner/>;
 
-		return (
-			<Fragment>
-				<input
-					type='text'
-					className='search-input'
-					placeholder='🔍 Search GIFs'
-					onChange={this.handleChange}
-					onKeyPress={this.handleKeyPress}
-				/>
-				{content}
-			</Fragment>
-		);
-	}
-}
+    return (
+        <React.Fragment>
+            <input
+                type='text'
+                className='search-input'
+                placeholder='🔍 Search GIFs'
+                onChange={handleSearchChange}
+                onKeyPress={handleKeyPress}
+            />
+            {content}
+        </React.Fragment>
+    );
+};

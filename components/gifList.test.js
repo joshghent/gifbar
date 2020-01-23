@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import GifList from './gifList';
+import {GifList} from "./gifList";
 import { mockGifs } from '../__mocks__/dataMocks';
 
 let GifListWrapper;

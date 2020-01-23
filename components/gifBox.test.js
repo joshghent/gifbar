@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import GifBox from './gifBox';
 import { mockGifs } from '../__mocks__/dataMocks';
+import {GifBox} from "./gifBox";
 
 it('Renders Spinner or GifList according to gifs in the state', () => {
   const wrapper = shallow(<GifBox />);
