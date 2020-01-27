@@ -42,7 +42,7 @@
     "dependencies": {
         "@jych/gif-provider": "^0.5.0",
         "auto-launch": "^5.0.5",
-        "concurrently": "5.0.2",
+        "concurrently": "5.1.0",
         "dotenv": "^8.2.0",
         "giphy-api": "^2.0.1",
         "lodash.isempty": "^4.4.0",
