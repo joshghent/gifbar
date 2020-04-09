@@ -74,7 +74,7 @@
         "node-pty": "^0.10.0-beta1",
         "parcel-bundler": "^1.9.6",
         "prettier": "^2.0.0",
-        "wait-on": "4.0.1"
+        "wait-on": "4.0.2"
     },
     "build": {
         "appId": "com.joshghent.gifbar",
