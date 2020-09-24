@@ -8,8 +8,8 @@
 
 ## Demo
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/joshghent/gifbar.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/joshghent/gifbar.svg?branch=master)](https://travis-ci.org/joshghent/gifbar)
+[![Known Vulnerabilities](https://snyk.io/test/github/joshghent/gifbar/badge.svg)](https://snyk.io/test/github/joshghent/gifbar)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6070b197c3644c03bb3f0ec79d641675)](https://app.codacy.com/app/joshghent/gifbar?utm_source=github.com&utm_medium=referral&utm_content=joshgrent/gifbar&utm_campaign=Badge_Grade_Settings)
 
 ![demo video](./demo.gif)
 
