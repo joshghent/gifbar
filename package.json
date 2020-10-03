@@ -1,96 +1,104 @@
 {
-    "name": "@joshghent/gifbar",
-    "version": "1.0.0",
-    "description": "A Mac Menu bar for getting your favourite gifs URL to send to your friends",
-    "main": "./dist/index.js",
-    "license": "MIT",
-    "private": false,
-    "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
-    "scripts": {
-        "prestart": "yarn build",
-        "start": "electron .",
-        "watch:electron": "parcel watch index.js --target=electron",
-        "watch:react": "parcel watch main.js --target=node",
-        "watch": "concurrently \"yarn watch:electron\" \"yarn watch:react\" ",
-        "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
-        "build-linux": "electron-packager . GifBar --platform=linux --arch x64 --out dist/ --executableName=GifBar && electron-installer-debian --config linuxBuildConfig.json",
-        "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
-        "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
-        "test": "jest --env=jsdom --coverage --colors",
-        "test:watch": "jest --env=jsdom --colors --watchAll",
-        "bundlesize": "bundlesize"
+  "name": "@joshghent/gifbar",
+  "version": "1.0.0",
+  "description": "A Menu bar for getting your favourite gifs URL to send to your friends",
+  "main": "./dist/index.js",
+  "license": "MIT",
+  "private": false,
+  "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
+  "scripts": {
+    "prestart": "yarn build",
+    "start": "electron .",
+    "watch:electron": "parcel watch index.js --target=electron",
+    "watch:react": "parcel watch main.js --target=node",
+    "watch": "concurrently \"yarn watch:electron\" \"yarn watch:react\" ",
+    "build": "parcel build index.js --target=electron && parcel build main.js --target=node",
+    "build-linux": "electron-packager . GifBar --platform=linux --arch x64 --out dist/ --executableName=GifBar && electron-installer-debian --config linuxBuildConfig.json",
+    "package": "electron-packager . GifBar --platform=darwin --icon=icon.icns --overwrite --out=GifBarApp",
+    "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
+    "test": "jest --env=jsdom --coverage --colors",
+    "test:watch": "jest --env=jsdom --colors --watchAll",
+    "bundlesize": "bundlesize"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
+    "collectCoverageFrom": [
+      "components/**/*.{js,jsx}"
+    ]
+  },
+  "keywords": [
+    "giphy",
+    "gif",
+    "bar",
+    "mac",
+    "osx",
+    "os",
+    "electron"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshghent/giphy-bar.git"
+  },
+  "dependencies": {
+    "@jych/gif-provider": "^0.5.0",
+    "auto-launch": "^5.0.5",
+    "concurrently": "5.2.0",
+    "dotenv": "^8.2.0",
+    "giphy-api": "^2.0.1",
+    "lodash.isempty": "^4.4.0",
+    "lodash.map": "^4.6.0",
+    "menubar": "^9.0.0",
+    "react": "16.13.1",
+    "react-copy-to-clipboard": "5.0.2",
+    "react-dom": "16.13.1",
+    "react-loading": "2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "bundlesize": "^0.18.0",
+    "electron": "^9.0.0",
+    "electron-builder": "22.7.0",
+    "electron-installer-debian": "^3.0.0",
+    "electron-packager": "^14.0.6",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.5.0",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "jest": "^23.6.0",
+    "node-pty": "^0.10.0-beta1",
+    "parcel-bundler": "^1.9.6",
+    "prettier": "^2.0.0",
+    "wait-on": "5.0.0"
+  },
+  "build": {
+    "appId": "com.joshghent.gifbar",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": "dmg",
+      "icon": "icon.icns",
+      "type": "development"
     },
-    "jest": {
-        "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
-        "collectCoverageFrom": [
-            "components/**/*.{js,jsx}"
-        ]
+    "win": {
+      "target": "nsis",
+      "arch": [
+        "x64",
+        "ia32"
+      ],
+      "icon": "icon.icns"
     },
-    "keywords": [
-        "giphy",
-        "gif",
-        "bar",
-        "mac",
-        "osx",
-        "os",
-        "electron"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/joshghent/giphy-bar.git"
+    "directories": {
+      "buildResources": "assets"
     },
-    "dependencies": {
-        "@jych/gif-provider": "^0.5.0",
-        "auto-launch": "^5.0.5",
-        "concurrently": "5.2.0",
-        "dotenv": "^8.2.0",
-        "giphy-api": "^2.0.1",
-        "lodash.isempty": "^4.4.0",
-        "lodash.map": "^4.6.0",
-        "menubar": "^9.0.0",
-        "react": "16.13.1",
-        "react-copy-to-clipboard": "5.0.2",
-        "react-dom": "16.13.1",
-        "react-loading": "2.0.3"
-    },
-    "devDependencies": {
-        "babel-core": "^6.26.3",
-        "babel-preset-env": "^1.7.0",
-        "babel-preset-react": "^6.24.1",
-        "bundlesize": "^0.18.0",
-        "electron": "^9.0.0",
-        "electron-builder": "22.7.0",
-        "electron-installer-debian": "^3.0.0",
-        "electron-packager": "^14.0.6",
-        "enzyme": "^3.6.0",
-        "enzyme-adapter-react-16": "^1.5.0",
-        "eslint": "^6.5.1",
-        "eslint-config-airbnb": "^18.0.1",
-        "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-react": "^7.16.0",
-        "eslint-plugin-react-hooks": "^4.0.0",
-        "jest": "^23.6.0",
-        "node-pty": "^0.10.0-beta1",
-        "parcel-bundler": "^1.9.6",
-        "prettier": "^2.0.0",
-        "wait-on": "5.0.0"
-    },
-    "build": {
-        "appId": "com.joshghent.gifbar",
-        "mac": {
-            "category": "public.app-category.entertainment",
-            "target": "dmg",
-            "icon": "icon.icns",
-            "type": "development"
-        },
-        "directories": {
-            "buildResources": "assets"
-        },
-        "files": [
-            "dist/**/*",
-            "node_modules/**/*",
-            "assets/*"
-        ]
-    }
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "assets/*"
+    ]
+  }
 }
