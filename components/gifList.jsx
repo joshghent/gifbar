@@ -8,7 +8,7 @@ const GifList = ({ gifs, handleGifClick, copied }) => {
       gif={gif}
       key={index}
       gifId={index}
-      onGifClick={(gifId) => handleGifClick(gifId)}
+      onGifClick={handleGifClick}
       isCopied={copied === index}
     />
   ));

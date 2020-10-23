@@ -14,103 +14,6 @@ const gifProvider = new CompositeGifProvider([giphyGifProvider, tenorGifProvider
 dotenv.config();
 const WAIT_INTERVAL = 1000;
 
-// export default class GifBox extends React.Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       value: '',
-//       copied: null,
-//       typing: false,
-//       typingTimeout: 0,
-//       gifs: [], // an array of Gifs (from gif-provider)
-//     };
-
-//     this.searchGifs = this.searchGifs.bind(this);
-//     this.handleChange = this.handleChange.bind(this);
-//     this.triggerSearch = this.triggerSearch.bind(this);
-//     this.handleGifClick = this.handleGifClick.bind(this);
-//     this.handleKeyPress = this.handleKeyPress.bind(this);
-//   }
-
-//   handleGifClick(gifId) {
-//     this.setState({ copied: gifId });
-//   }
-
-//   handleChange(e) {
-//     if (this.state.typingTimeout) {
-//       clearTimeout(this.state.typingTimeout);
-//     }
-
-//     this.setState({
-//       value: e.target.value,
-//       typing: false,
-//       typingTimeout: setTimeout(() => {
-//         this.triggerSearch();
-//       }, WAIT_INTERVAL),
-//     });
-//   }
-
-//   handleKeyPress(e) {
-//     if (e.key === 'Enter') {
-//       this.triggerSearch();
-//     }
-//   }
-
-//   triggerSearch() {
-//     const { value } = this.state;
-//     this.setState({ copied: null });
-//     this.searchGifs(value);
-//   }
-
-//   searchGifs(query) {
-//     if (query === '') {
-//       gifProvider.trending(30).then((gifs) => {
-//         this.setState({ gifs });
-//       });
-//     } else {
-//       gifProvider.search(query, 30).then((gifs) => {
-//         this.setState({ gifs });
-//       });
-//     }
-//   }
-
-//   componentDidMount() {
-//     gifProvider.trending(30).then((gifs) => {
-//       this.setState({ gifs });
-//     });
-//   }
-
-//   render() {
-//     let content = null;
-//     if (isEmpty(this.state.gifs)) {
-//       content = <Spinner />;
-//     } else {
-//       content = (
-//         <GifList
-//           gifs={this.state.gifs}
-//           copied={this.state.copied}
-//           onSearch={this.searchGifs}
-//           handleGifClick={this.handleGifClick}
-//         />
-//       );
-//     }
-
-//     return (
-//       <Fragment>
-//         <input
-//           type="text"
-//           className="search-input"
-//           placeholder="🔍 Search GIFs"
-//           onChange={this.handleChange}
-//           onKeyPress={this.handleKeyPress}
-//         />
-//         {content}
-//       </Fragment>
-//     );
-//   }
-// }
-
 const GifBox = () => {
   const [value, setValue] = useState('');
   const [copied, setCopied] = useState(null);
@@ -119,8 +22,8 @@ const GifBox = () => {
   const [gifs, setGifs] = useState([]);
 
   useEffect(() => {
-    gifProvider.trending(30).then((arr) => {
-      setGifs(arr);
+    gifProvider.trending(30).then((gifsArr) => {
+      setGifs(gifsArr);
     });
   }, []);
 
@@ -130,12 +33,12 @@ const GifBox = () => {
 
   const searchGifs = (query) => {
     if (query === '') {
-      gifProvider.trending(30).then((arr) => {
-        setGifs(arr);
+      gifProvider.trending(30).then((gifsArr) => {
+        setGifs(gifsArr);
       });
     } else {
-      gifProvider.search(query, 30).then((arr) => {
-        setGifs(arr);
+      gifProvider.search(query, 30).then((gifsArr) => {
+        setGifs(gifsArr);
       });
     }
   };
@@ -164,6 +67,7 @@ const GifBox = () => {
   };
 
   let content = null;
+
   if (isEmpty(gifs)) {
     content = <Spinner />;
   } else {
@@ -176,6 +80,7 @@ const GifBox = () => {
       />
     );
   }
+
   return (
     <>
       <input
