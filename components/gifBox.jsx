@@ -65,21 +65,6 @@ const GifBox = () => {
     }
   };
 
-  let content = null;
-
-  if (isEmpty(gifs)) {
-    content = <Spinner />;
-  } else {
-    content = (
-      <GifList
-        gifs={gifs}
-        copied={copied}
-        onSearch={searchGifs}
-        handleGifClick={handleGifClick}
-      />
-    );
-  }
-
   return (
     <>
       <input
@@ -89,7 +74,16 @@ const GifBox = () => {
         onChange={(e) => handleChange(e)}
         onKeyPress={(e) => handleKeyPress(e)}
       />
-      {content}
+      {isEmpty(gifs) ? (
+          <Spinner />
+      ) : (
+          <GifList
+              gifs={gifs}
+              copied={copied}
+              onSearch={searchGifs}
+              handleGifClick={handleGifClick}
+          />
+      )}
     </>
   );
 };
