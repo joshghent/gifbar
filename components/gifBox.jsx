@@ -1,9 +1,9 @@
 
 import React from "react";
-import Spinner from "./spinner.js";
+import Spinner from "./spinner.jsx";
 import isEmpty  from "lodash.isEmpty";
 import dotenv from "dotenv";
-import GifList from "./gifList.js";
+import GifList from "./gifList.jsx";
 
 import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
 
