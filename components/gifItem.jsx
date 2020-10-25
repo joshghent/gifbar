@@ -3,7 +3,7 @@ import React from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const GifItem = ({
-  gif, onGifClick, gifId, isCopied
+  gif, onGifClick, gifId, isCopied,
 }) => (
   <CopyToClipboard text={gif.originalUrl} onCopy={() => onGifClick(gifId)}>
     <div className={isCopied ? 'gif-item copied' : 'gif-item'}>
