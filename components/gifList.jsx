@@ -1,4 +1,5 @@
 import map from 'lodash.map';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import GifItem from './gifItem';
@@ -19,6 +20,14 @@ const GifList = ({ gifs, handleGifClick, copied }) => {
       <div className="gif-list">{gifNodes}</div>
     </div>
   );
+};
+GifList.propTypes = {
+    gifs: PropTypes.shape({
+        originalUrl: PropTypes.string.isRequired,
+        thumbnailUrl: PropTypes.string.isRequired,
+    }),
+    handleGifClick: PropTypes.func.isRequired,
+    copied: PropTypes.number.isRequired,
 };
 
 export default GifList;
