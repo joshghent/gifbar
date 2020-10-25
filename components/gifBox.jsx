@@ -75,14 +75,14 @@ const GifBox = () => {
         onKeyPress={(e) => handleKeyPress(e)}
       />
       {isEmpty(gifs) ? (
-          <Spinner />
+        <Spinner />
       ) : (
-          <GifList
-              gifs={gifs}
-              copied={copied}
-              onSearch={searchGifs}
-              handleGifClick={handleGifClick}
-          />
+        <GifList
+          gifs={gifs}
+          copied={copied}
+          onSearch={searchGifs}
+          handleGifClick={handleGifClick}
+        />
       )}
     </>
   );

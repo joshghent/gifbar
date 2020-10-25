@@ -22,12 +22,12 @@ const GifList = ({ gifs, handleGifClick, copied }) => {
   );
 };
 GifList.propTypes = {
-    gifs: PropTypes.shape({
-        originalUrl: PropTypes.string.isRequired,
-        thumbnailUrl: PropTypes.string.isRequired,
-    }),
-    handleGifClick: PropTypes.func.isRequired,
-    copied: PropTypes.number.isRequired,
+  gifs: PropTypes.shape({
+    originalUrl: PropTypes.string.isRequired,
+    thumbnailUrl: PropTypes.string.isRequired,
+  }).isRequired,
+  handleGifClick: PropTypes.func.isRequired,
+  copied: PropTypes.number.isRequired,
 };
 
 export default GifList;

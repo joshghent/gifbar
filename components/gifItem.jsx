@@ -12,13 +12,13 @@ const GifItem = ({ gif, onGifClick, gifId, isCopied }) => (
     </CopyToClipboard>
 );
 GifItem.propTypes = {
-    gif: PropTypes.shape({
-        originalUrl: PropTypes.string.isRequired,
-        thumbnailUrl: PropTypes.string.isRequired,
-    }),
-    onGifClick: PropTypes.func.isRequired,
-    gifId: PropTypes.number.isRequired,
-    isCopied: PropTypes.bool,
+  gif: PropTypes.shape({
+    originalUrl: PropTypes.string.isRequired,
+    thumbnailUrl: PropTypes.string.isRequired,
+  }).isRequired,
+  onGifClick: PropTypes.func.isRequired,
+  gifId: PropTypes.number.isRequired,
+  isCopied: PropTypes.bool,
 };
 
 export default GifItem;
