@@ -28,7 +28,7 @@ const GifBox = () => {
   }, []);
 
   const handleGifClick = (gifId) => {
-    setGifs(gifId);
+    setCopied(gifId);
   };
 
   const searchGifs = (query) => {
