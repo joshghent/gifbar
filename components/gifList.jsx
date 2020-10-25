@@ -1,5 +1,6 @@
-import React from 'react';
 import map from 'lodash.map';
+import React from 'react';
+
 import GifItem from './gifItem';
 
 const GifList = ({ gifs, handleGifClick, copied }) => {

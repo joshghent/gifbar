@@ -1,10 +1,10 @@
+import dotenv from 'dotenv';
+import { GiphyGifProvider, TenorGifProvider, CompositeGifProvider } from '@jych/gif-provider';
+import isEmpty from 'lodash.isempty';
 import React, { useState, useEffect } from 'react';
-import Spinner from "./spinner.js";
-import isEmpty  from "lodash.isEmpty";
-import dotenv from "dotenv";
-import GifList from "./gifList.js";
 
-import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
+import GifList from './gifList';
+import Spinner from './spinner';
 
 // todo the API keys should not be in the git repo
 const giphyGifProvider = new GiphyGifProvider('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
@@ -12,12 +12,12 @@ const tenorGifProvider = new TenorGifProvider('Y91ZIZBKZ3DL');
 const gifProvider = new CompositeGifProvider([giphyGifProvider, tenorGifProvider]);
 
 dotenv.config();
+
 const WAIT_INTERVAL = 1000;
 
 const GifBox = () => {
   const [value, setValue] = useState('');
   const [copied, setCopied] = useState(null);
-  const [typing, setTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(0);
   const [gifs, setGifs] = useState([]);
 
@@ -54,7 +54,6 @@ const GifBox = () => {
     }
 
     setValue(e.target.value);
-    setTyping(false);
     setTypingTimeout(setTimeout(() => {
       triggerSearch();
     }, WAIT_INTERVAL));
