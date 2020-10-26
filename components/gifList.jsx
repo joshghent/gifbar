@@ -1,30 +1,33 @@
+import map from 'lodash.map';
+import PropTypes from 'prop-types';
 import React from 'react';
-import GifItem from './gifItem.jsx';
-import  map from 'lodash.map';
 
-export default class GifList extends React.Component {
-	constructor(props) {
-		super(props);
-	}
+import GifItem from './gifItem';
 
-	render() {
-		const gifNodes = map(this.props.gifs, (gif, index) => {
-			return (
-				<GifItem
-					gif={gif}
-					key={index}
-					gifId={index}
-					onGifClick={(gifId) => this.props.handleGifClick(gifId)}
-					isCopied={this.props.copied === index}
-				/>
-			);
-		});
+const GifList = ({ gifs, handleGifClick, copied }) => {
+  const gifNodes = map(gifs, (gif, index) => (
+    <GifItem
+      gif={gif}
+      key={index}
+      gifId={index}
+      onGifClick={handleGifClick}
+      isCopied={copied === index}
+    />
+  ));
+  return (
+    <div>
+      <img src="./../assets/giphy-mark.png" className="giphy-watermark" alt="" />
+      <div className="gif-list">{gifNodes}</div>
+    </div>
+  );
+};
+GifList.propTypes = {
+  gifs: PropTypes.shape({
+    originalUrl: PropTypes.string.isRequired,
+    thumbnailUrl: PropTypes.string.isRequired,
+  }).isRequired,
+  handleGifClick: PropTypes.func.isRequired,
+  copied: PropTypes.number.isRequired,
+};
 
-		return (
-			<div>
-				<img src='./../assets/giphy-mark.png' className='giphy-watermark' />
-				<div className='gif-list'>{gifNodes}</div>
-			</div>
-		);
-	}
-}
+export default GifList;

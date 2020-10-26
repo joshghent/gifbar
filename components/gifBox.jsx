@@ -1,113 +1,91 @@
+import dotenv from 'dotenv';
+import { GiphyGifProvider, TenorGifProvider, CompositeGifProvider } from '@jych/gif-provider';
+import isEmpty from 'lodash.isempty';
+import React, { useState, useEffect } from 'react';
 
-import React from "react";
-import Spinner from "./spinner.jsx";
-import isEmpty  from "lodash.isEmpty";
-import dotenv from "dotenv";
-import GifList from "./gifList.jsx";
-
-import {GiphyGifProvider, TenorGifProvider, CompositeGifProvider} from "@jych/gif-provider";
+import GifList from './gifList';
+import Spinner from './spinner';
 
 // todo the API keys should not be in the git repo
-const giphyGifProvider = new GiphyGifProvider("bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin");
-const tenorGifProvider = new TenorGifProvider("Y91ZIZBKZ3DL");
-const gifProvider = new CompositeGifProvider([ giphyGifProvider, tenorGifProvider ]);
+const giphyGifProvider = new GiphyGifProvider('bH5Z69mu6KFkaxvRmNgi1kPtL02Cemin');
+const tenorGifProvider = new TenorGifProvider('Y91ZIZBKZ3DL');
+const gifProvider = new CompositeGifProvider([giphyGifProvider, tenorGifProvider]);
 
 dotenv.config();
+
 const WAIT_INTERVAL = 1000;
 
-export default class GifBox extends React.Component {
-	constructor(props) {
-		super(props);
+const GifBox = () => {
+  const [value, setValue] = useState('');
+  const [copied, setCopied] = useState(null);
+  const [typingTimeout, setTypingTimeout] = useState(0);
+  const [gifs, setGifs] = useState([]);
 
-		this.state = {
-			value         : "",
-			copied        : null,
-			typing        : false,
-			typingTimeout : 0,
-			gifs          : [], // an array of Gifs (from gif-provider)
-		};
+  useEffect(() => {
+    gifProvider.trending(30).then((gifsArr) => {
+      setGifs(gifsArr);
+    });
+  }, []);
 
-		this.searchGifs = this.searchGifs.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.triggerSearch = this.triggerSearch.bind(this);
-		this.handleGifClick = this.handleGifClick.bind(this);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
-	}
+  const handleGifClick = (gifId) => {
+    setCopied(gifId);
+  };
 
-	handleGifClick(gifId) {
-		this.setState({ copied: gifId });
-	}
+  const searchGifs = (query) => {
+    if (query === '') {
+      gifProvider.trending(30).then((gifsArr) => {
+        setGifs(gifsArr);
+      });
+    } else {
+      gifProvider.search(query, 30).then((gifsArr) => {
+        setGifs(gifsArr);
+      });
+    }
+  };
 
-	handleChange(e) {
-		if (this.state.typingTimeout) {
-			clearTimeout(this.state.typingTimeout);
-		}
+  const triggerSearch = () => {
+    setCopied(null);
+    searchGifs(value);
+  };
 
-		this.setState({
-			value         : e.target.value,
-			typing        : false,
-			typingTimeout : setTimeout(() => {
-				this.triggerSearch();
-			}, WAIT_INTERVAL)
-		});
-	}
+  const handleChange = (e) => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
 
-	handleKeyPress(e) {
-		if (e.key === "Enter") {
-			this.triggerSearch();
-		}
-	}
+    setValue(e.target.value);
+    setTypingTimeout(setTimeout(() => {
+      triggerSearch();
+    }, WAIT_INTERVAL));
+  };
 
-	triggerSearch() {
-		const { value } = this.state;
-		this.setState({ copied: null });
-		this.searchGifs(value);
-	}
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      triggerSearch();
+    }
+  };
 
-	searchGifs(query) {
-		if (query === "") {
-			gifProvider.trending(30).then((gifs) => {
-				this.setState({ gifs });
-			})
-		} else {
-			gifProvider.search(query, 30).then((gifs) => {
-				this.setState({ gifs });
-			});
-		}
-	}
-        
-  componentDidMount() {
-		gifProvider.trending(30).then((gifs) => {
-			this.setState({ gifs });
-		})
-	}
+  return (
+    <>
+      <input
+        type="text"
+        className="search-input"
+        placeholder="🔍 Search GIFs"
+        onChange={(e) => handleChange(e)}
+        onKeyPress={(e) => handleKeyPress(e)}
+      />
+      {isEmpty(gifs) ? (
+        <Spinner />
+      ) : (
+        <GifList
+          gifs={gifs}
+          copied={copied}
+          onSearch={searchGifs}
+          handleGifClick={handleGifClick}
+        />
+      )}
+    </>
+  );
+};
 
-	render() {
-		let content = null;
-		if (isEmpty(this.state.gifs)) {
-			content = <Spinner />;
-		} else {
-			content = (
-				<GifList
-					gifs={this.state.gifs}
-					copied={this.state.copied}
-					onSearch={this.searchGifs}
-					handleGifClick={this.handleGifClick}
-				/>
-			);
-		}
-
-		return (
-			<Fragment>
-				<input
-					type='text'
-					className='search-input'
-					placeholder='🔍 Search GIFs'
-					onChange={this.handleChange}
-					onKeyPress={this.handleKeyPress}
-				/>
-				{content}
-			</Fragment>
-		);
-	}
-}
+export default GifBox;
