@@ -79,7 +79,7 @@ $ yarn run package
 ```
 
 ## Contact
-For any further information regarding questions or technical issues, please contact the project team at josh@ghent.cloud or via Twitter @joshgent.
+For any further information regarding questions or technical issues, please contact the project team on Twitter [@joshghent](https://twitter.com/joshghent).
 
 ## License
 This project operates under the MIT License, which allows commercial and private use, as well as allows modification and distribution of this software. The authors or copyright holders are not liable for any claim, damages arising from or out of the software. More information can be found [here](https://github.com/joshghent/gifbar/blob/master/LICENSE)
