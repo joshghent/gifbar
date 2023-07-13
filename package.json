@@ -18,7 +18,8 @@
         "package-dmg": "electron-installer-dmg ./GifBarApp/GifBar-darwin-x64/GifBar.app GifBar --icon=icon.icns --overwrite --out=GifBarInstaller",
         "test": "jest --env=jsdom --coverage --colors",
         "test:watch": "jest --env=jsdom --colors --watchAll",
-        "bundlesize": "bundlesize"
+        "bundlesize": "bundlesize",
+        "release": "./release.sh"
     },
     "jest": {
         "setupTestFrameworkScriptFile": "<rootDir>setupTests.js",
