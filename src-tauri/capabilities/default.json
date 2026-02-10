@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/dev/crates/tauri-utils/schema/capability.json",
+  "identifier": "default",
+  "description": "Default permissions for GifBar",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-read-text",
+    "autostart:allow-enable",
+    "autostart:allow-disable",
+    "autostart:allow-is-enabled"
+  ]
+}
