@@ -1,4 +1,5 @@
 use tauri::{
+    image::Image,
     menu::{MenuBuilder, MenuItemBuilder},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager,
@@ -14,6 +15,12 @@ pub fn run() {
             Some(vec![]),
         ))
         .setup(|app| {
+            // Hide from dock — this is a menu-bar-only app
+            #[cfg(target_os = "macos")]
+            {
+                app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            }
+
             // Build the right-click context menu
             let quit = MenuItemBuilder::new("Quit GifBar")
                 .id("quit")
@@ -21,11 +28,13 @@ pub fn run() {
 
             let menu = MenuBuilder::new(app).item(&quit).build()?;
 
-            // Build the tray icon
+            // Build the tray icon using the icon embedded at compile time
+            let tray_icon = Image::from_bytes(include_bytes!("../icons/tray-icon.png"))?;
             let _tray = TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(tray_icon)
+                .icon_as_template(true)
                 .menu(&menu)
-                .menu_on_left_click(false)
+                .show_menu_on_left_click(false)
                 .on_menu_event(|app, event| match event.id().as_ref() {
                     "quit" => {
                         app.exit(0);

@@ -24,10 +24,6 @@
         "center": true
       }
     ],
-    "trayIcon": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
     "security": {
       "csp": "default-src 'self'; img-src 'self' https://*.giphy.com https://*.tenor.com https://tenor.googleapis.com https://media.tenor.com https://media1.tenor.com; connect-src 'self' https://api.giphy.com https://tenor.googleapis.com; style-src 'self' 'unsafe-inline'"
     }
