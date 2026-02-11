@@ -25,7 +25,15 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' https://*.giphy.com https://*.tenor.com https://tenor.googleapis.com https://media.tenor.com https://media1.tenor.com; connect-src 'self' https://api.giphy.com https://tenor.googleapis.com; style-src 'self' 'unsafe-inline'"
+      "csp": "default-src 'self'; img-src 'self' https://*.giphy.com https://*.tenor.com https://tenor.googleapis.com https://media.tenor.com https://media1.tenor.com; connect-src 'self' https://api.giphy.com https://tenor.googleapis.com https://github.com https://objects.githubusercontent.com; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/joshghent/giphy-bar/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDU5MzdCNzY0MzQ5NDU0QjcKUldTM1ZKUTBaTGMzV2V2NnlkYzFqd3pvbVRyM1dtdzlhUXhVUGVSeFQ3ekNHa1VFWkU4WitlcXAK"
     }
   },
   "bundle": {
@@ -37,6 +45,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "createUpdaterArtifacts": "v1Compatible",
     "targets": "all",
     "macOS": {
       "minimumSystemVersion": "10.15"
