@@ -25,3 +25,4 @@ Thumbs.db
 
 # Coverage
 coverage/
+.parcel*
