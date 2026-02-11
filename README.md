@@ -1,85 +1,78 @@
 <div align="center">
 	<img height="250" src="./assets/gif-original-full-size.png" alt="gifbar logo">
 	<h1><b>GifBar</b></h1>
-	<p><b>A Mac Menu bar for getting Gifs!</b></p>
-	</br>
-	</br>
+	<p><b>A menu bar app for searching, copying and sharing GIFs</b></p>
+	<p>Works on macOS, Windows, and Linux</p>
 </div>
 
 ## Demo
 
-[![Known Vulnerabilities](https://snyk.io/test/github/joshghent/gifbar/badge.svg)](https://snyk.io/test/github/joshghent/gifbar)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6070b197c3644c03bb3f0ec79d641675)](https://app.codacy.com/app/joshghent/gifbar?utm_source=github.com&utm_medium=referral&utm_content=joshgrent/gifbar&utm_campaign=Badge_Grade_Settings)
-
 ![demo video](./demo.gif)
 
-## Get Started 
-This is a desktop application for Mac that generates a variety of gifs according to user input. 
-Thank you for considering contributing to Gifbar. Any contributions are more than welcome!
+## Features
 
+- Lives in your system tray / menu bar
+- Search GIFs from GIPHY and Tenor
+- Click any GIF to copy its URL to clipboard
+- Lightweight (~3 MB installer, ~30 MB RAM)
+- Cross-platform: macOS, Windows, Linux
 
-Before you begin contributing to the documentation, here is a brief overview of the classes that are used in this project:
+## Prerequisites
 
-•	gifBox: You can reference this class for the queries, the giphy searching process, as well as other user interface configurations. This is essential to the application as a whole as user input searches are created and optimized here.
+- [Node.js](https://nodejs.org/) 22+
+- [Rust](https://rustup.rs/) (stable)
+- Platform-specific dependencies:
+  - **macOS**: Xcode Command Line Tools
+  - **Linux**: `libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev`
+  - **Windows**: Visual Studio C++ Build Tools + WebView2
 
-•	gifItem: This is a class that serves the purpose of copying the gif that is generated from the search onto the keyboard. It lets the user know that the gif is copied as well as adds the selected gif onto the copy/paste queue.  
+## Setup
 
-•	gifList: This class deals with user input and mouse positions on different buttons on the applications. Essentially, you can refer to this class for creating outputs depending on which button the user selects. 
+1. Clone the repository
+2. Copy `.env.example` to `.env` and add your API keys:
+   ```
+   VITE_GIPHY_API_KEY=your_giphy_key
+   VITE_TENOR_API_KEY=your_tenor_key
+   ```
+3. Install dependencies:
+   ```shell
+   npm install
+   ```
 
-•	Index: Lastly, for this class, it has code that can launch, restart, or quit this app. 
+## Development
 
-All of the following classes listed above have been written on JavaScript. Therefore, contributions should be done in JavaScript for cohesiveness with the existing code. There is a code of conduct to be followed which can be found [here](https://github.com/joshghent/gifbar/blob/master/CODE_OF_CONDUCT.md). Furthermore, the dependencies necessary for this project are listed below:
+```shell
+npm run tauri dev
+```
 
-Dependencies:
+## Testing
 
-•	Babel-preset-react
-•	Electron
-•	Electron builder
-•	Parcel bundler
-•	Prettier
-•	Wait-on
+```shell
+npm test
+```
 
+## Building
 
+```shell
+npm run tauri build
+```
+
+This produces platform-specific installers:
+- **macOS**: `.dmg` in `src-tauri/target/release/bundle/dmg/`
+- **Windows**: `.exe` installer in `src-tauri/target/release/bundle/nsis/`
+- **Linux**: `.deb` and `.AppImage` in `src-tauri/target/release/bundle/`
+
+## Tech Stack
+
+- **[Tauri v2](https://v2.tauri.app/)** — lightweight desktop framework (Rust backend, native webview)
+- **[Svelte 5](https://svelte.dev/)** — reactive UI framework (compiles to vanilla JS)
+- **[Vite](https://vite.dev/)** — frontend build tool
+- **[Vitest](https://vitest.dev/)** — test framework
 
 ## Download
+
 See all releases [here](https://github.com/joshghent/gifbar/releases).
-There, you can download the `.dmg` installer or the `.app` file
-
-## Running the app locally
-
-```shell
-$ yarn start
-```
-
-## Developing
-
-_Watch All_
-```shell
-$ yarn watch
-```
-
-_Electron_
-```shell
-$ yarn watch:electron
-```
-
-_React_
-```shell
-$ yarn watch:react
-```
-
-_Create DMG_
-```shell
-$ yarn run package-dmg
-```
-
-_Create App_
-```shell
-$ yarn run package
-```
-
-## Contact
-For any further information regarding questions or technical issues, please contact the project team on Twitter [@joshghent](https://twitter.com/joshghent).
 
 ## License
-This project operates under the MIT License, which allows commercial and private use, as well as allows modification and distribution of this software. The authors or copyright holders are not liable for any claim, damages arising from or out of the software. More information can be found [here](https://github.com/joshghent/gifbar/blob/master/LICENSE)
+
+[MIT](./LICENSE)
