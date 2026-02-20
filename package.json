@@ -29,7 +29,7 @@
     "@testing-library/svelte": "^5.2.0",
     "@testing-library/jest-dom": "^6.0.0",
     "jsdom": "^25.0.0",
-    "svelte": "^5.0.0",
+    "svelte": "^5.53.0",
     "vite": "^6.0.0",
     "vitest": "^3.0.0"
   }
