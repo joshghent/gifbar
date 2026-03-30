@@ -98,6 +98,7 @@ jobs:
           tauriScript: npx tauri
           tagName: ${{ needs.release-please.outputs.tag_name }}
           releaseName: GifBar ${{ needs.release-please.outputs.tag_name }}
+          releaseDraft: true
 
       - uses: actions/upload-artifact@v4
         with:
@@ -108,3 +109,16 @@ jobs:
             src-tauri/target/release/bundle/**/*.AppImage
             src-tauri/target/release/bundle/**/*.exe
             src-tauri/target/release/bundle/**/*.msi
+
+  publish-release:
+    needs: [build, release-please]
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Publish release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release edit "${{ needs.release-please.outputs.tag_name }}" --draft=false
