@@ -1,6 +1,6 @@
 [package]
 name = "gifbar"
-version = "2.0.0"
+version = "2.0.1"
 description = "A menu bar app for searching, copying and sharing GIFs"
 authors = ["Josh Ghent"]
 license = "MIT"
