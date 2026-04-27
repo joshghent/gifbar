@@ -1,0 +1,33 @@
+name: Secret scanning (betterleaks)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  betterleaks:
+    name: betterleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install betterleaks
+        run: |
+          set -euo pipefail
+          VERSION=1.1.2
+          ARCH=$(uname -m)
+          case "$ARCH" in
+            x86_64) ARCH_TAG=x64 ;;
+            aarch64|arm64) ARCH_TAG=arm64 ;;
+            *) echo "Unsupported arch: $ARCH" && exit 1 ;;
+          esac
+          curl -fsSL --retry 3 --max-time 60 \
+            "https://github.com/betterleaks/betterleaks/releases/download/v${VERSION}/betterleaks_${VERSION}_linux_${ARCH_TAG}.tar.gz" \
+            | tar -xz -C /usr/local/bin betterleaks
+          chmod +x /usr/local/bin/betterleaks
+      - name: Run betterleaks
+        run: betterleaks dir . --redact --exit-code 1
