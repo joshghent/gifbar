@@ -1,0 +1,60 @@
+name: Secret scanning (betterleaks)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  betterleaks:
+    name: betterleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install betterleaks
+        run: |
+          set -euo pipefail
+          VERSION=1.1.2
+          ARCH=$(uname -m)
+          case "$ARCH" in
+            x86_64) ARCH_TAG=x64 ;;
+            aarch64|arm64) ARCH_TAG=arm64 ;;
+            *) echo "Unsupported arch: $ARCH" && exit 1 ;;
+          esac
+          curl -fsSL --retry 3 --max-time 60 \
+            "https://github.com/betterleaks/betterleaks/releases/download/v${VERSION}/betterleaks_${VERSION}_linux_${ARCH_TAG}.tar.gz" \
+            | tar -xz -C /usr/local/bin betterleaks
+          chmod +x /usr/local/bin/betterleaks
+      - name: Run betterleaks
+        id: scan
+        run: |
+          set +e
+          ARGS=(dir . --redact --report-format json --report-path betterleaks-report.json --exit-code 1)
+          if [ -f .betterleaks-baseline.json ]; then
+            ARGS+=(--baseline-path .betterleaks-baseline.json)
+          fi
+          betterleaks "${ARGS[@]}"
+          rc=$?
+          if [ -f betterleaks-report.json ] && [ "$(jq 'length' betterleaks-report.json 2>/dev/null || echo 0)" -gt 0 ]; then
+            {
+              echo "## Secret-scan findings"
+              echo ""
+              echo "Betterleaks flagged the entries below. Either rotate + remove the secret, or — if it's genuinely a false positive — add its fingerprint to \`.betterleaks-baseline.json\` (or extend the allowlist in \`.betterleaks.toml\`) and push again."
+              echo ""
+              echo "| Rule | File | Line | Fingerprint |"
+              echo "| --- | --- | --- | --- |"
+              jq -r '.[] | "| \(.RuleID) | \(.File) | \(.StartLine) | \(.Fingerprint // "n/a") |"' betterleaks-report.json
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit $rc
+      - name: Upload betterleaks report
+        if: always() && hashFiles('betterleaks-report.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: betterleaks-report
+          path: betterleaks-report.json
+          if-no-files-found: ignore
