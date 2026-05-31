@@ -1,0 +1,31 @@
+name: Code quality (Semgrep)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Semgrep
+        run: |
+          set -euo pipefail
+          pip install --user "semgrep==1.95.0"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Run Semgrep
+        run: |
+          set +e
+          semgrep --config p/default --config p/security-audit --config p/owasp-top-ten --config p/javascript --config p/typescript --error --disable-version-check --metrics off --timeout 120 .
+          rc=$?
+          exit $rc
