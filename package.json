@@ -31,7 +31,14 @@
     "jsdom": "^25.0.1",
     "svelte": "^5.55.5",
     "vite": "^6.4.2",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.0"
   },
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.13.0",
+  "overrides": {
+    "tar": "^0.4.46",
+    "tauri": "^2.11.1",
+    "rustls-webpki": "^0.103.12",
+    "rand": "^0.8.6",
+    "glib": "^0.20.0"
+  }
 }
