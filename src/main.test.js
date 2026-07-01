@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mount } from "svelte";
 
 vi.mock("svelte", () => ({
@@ -12,6 +12,7 @@ vi.mock("./App.svelte", () => ({
 describe("main.js", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.resetModules(); // Clear module cache to allow fresh imports
     document.body.innerHTML = '<div id="app"></div>';
   });
 
