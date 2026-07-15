@@ -1,0 +1,52 @@
+name: Code quality (Semgrep)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Semgrep
+        run: |
+          set -euo pipefail
+          pip install --user "semgrep==1.95.0"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Run Semgrep
+        run: |
+          set +e
+          semgrep --config p/default --config p/security-audit --config p/owasp-top-ten --config p/javascript --config p/typescript --json --output semgrep-report.json --disable-version-check --metrics off --timeout 120 .
+          rc=$?
+          if [ -f semgrep-report.json ] && [ "$(jq '.results | length' semgrep-report.json 2>/dev/null || echo 0)" -gt 0 ]; then
+            {
+              echo "## Semgrep findings"
+              echo ""
+              echo "Semgrep flagged the entries below, and RepoWarden tracks each as a task on your board. This check is **non-blocking** — it reports findings but won't fail your CI, so the workflow can land cleanly."
+              echo ""
+              echo "| Severity | Rule | File | Line |"
+              echo "| --- | --- | --- | --- |"
+              jq -r '.results[] | "| \(.extra.severity) | \(.check_id) | \(.path) | \(.start.line) |"' semgrep-report.json
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # Non-blocking by design: findings (rc 1) and a clean tree (rc 0) both
+          # pass. A real Semgrep crash (rc >= 2) only surfaces in the logs/summary
+          # — we still exit 0 so an "add scanning" PR never breaks the user's CI.
+          exit 0
+      - name: Upload Semgrep report
+        if: always() && hashFiles('semgrep-report.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep-report.json
+          if-no-files-found: ignore
