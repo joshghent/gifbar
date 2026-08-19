@@ -268,7 +268,7 @@ mod platform {
         // downloaded file still exists on disk for the user to attach.
         let _ = path;
         let mut cb = arboard::Clipboard::new().map_err(|e| ClipboardError::Clipboard(e.to_string()))?;
-        cb.set_html(super::html_snippet(url), Some(url))
+        cb.set_html(super::html_snippet(url), Some(url.to_string()))
             .map_err(|e| ClipboardError::Clipboard(e.to_string()))?;
         Ok(())
     }
