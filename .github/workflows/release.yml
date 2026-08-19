@@ -28,7 +28,13 @@ jobs:
   # the draft release as part of its own step, so a check that runs later
   # cannot prevent a bad release — it can only strand a burned version number
   # behind a draft that never gets assets.
+  #
+  # Only on the commit that merges a release PR. release-please cuts a release
+  # exactly then, so gating every master push instead would fail ordinary
+  # commits over a backend they do not ship, and stop release-please from
+  # maintaining its PR at all.
   preflight:
+    if: "startsWith(github.event.head_commit.message, 'chore(master): release')"
     runs-on: ubuntu-latest
     steps:
       - name: GIF proxy worker is reachable
@@ -48,6 +54,9 @@ jobs:
 
   release-please:
     needs: preflight
+    # preflight is skipped on ordinary commits; a skipped dependency would
+    # otherwise skip this job too. Run unless preflight actually failed.
+    if: always() && needs.preflight.result != 'failure' && needs.preflight.result != 'cancelled'
     runs-on: ubuntu-latest
     permissions:
       contents: write
