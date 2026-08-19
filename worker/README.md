@@ -34,17 +34,46 @@ All return `{ "gifs": [{ id, title, preview, original, source }] }`.
 
 ## Deploying
 
+CI does it. `.github/workflows/worker.yml` deploys on any push to `master`
+touching `worker/**`, and can be run by hand from the Actions tab
+(**Deploy worker** -> Run workflow).
+
+It needs one repository secret:
+
+| Secret | How to get it |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard -> My Profile -> API Tokens -> Create Token -> **Edit Cloudflare Workers** template |
+
+### The provider keys
+
+Deploying does **not** set the GIPHY and Tenor keys, and CI never sees them.
+Set them once, directly against Cloudflare:
+
 ```shell
-npm install
+cd worker && npm install
+npx wrangler login
 npx wrangler secret put GIPHY_API_KEY
 npx wrangler secret put TENOR_API_KEY
-npx wrangler deploy
 ```
 
-Then set the `VITE_GIF_API_BASE` **repository variable** in GitHub Actions to
-the URL `wrangler deploy` prints. The app falls back to
-`https://gifbar-api.joshghent.workers.dev` when the variable is unset, so if you
-deploy under that name the variable is optional.
+Or add them under the Worker's **Settings -> Variables and Secrets** in the
+Cloudflare dashboard, which avoids installing anything locally.
+
+They are deliberately not mirrored into GitHub secrets: they change maybe once
+a year, and keeping them in one place is the entire point of this worker.
+Secrets apply immediately — no redeploy needed.
+
+### Which URL
+
+The app falls back to `https://gifbar-api.joshghent.workers.dev`, so if the
+worker deploys under that name nothing else is needed. If it lands elsewhere,
+set the `VITE_GIF_API_BASE` **repository variable** to the deployed URL.
+
+### Deploying by hand
+
+```shell
+cd worker && npm install && npx wrangler deploy
+```
 
 ## Local development
 
