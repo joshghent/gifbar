@@ -1,0 +1,10 @@
+# Paths Semgrep should skip. Gitignore-style globs.
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+*.min.js
+*.min.css
+*.bundle.js
+*.test.*
+*.spec.*

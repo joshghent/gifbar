@@ -1,0 +1,55 @@
+name: Code quality (Semgrep)
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Semgrep
+        run: |
+          set -euo pipefail
+          pip install --user "semgrep==1.95.0"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Run Semgrep
+        run: |
+          set +e
+          semgrep --config p/default --config p/security-audit --config p/owasp-top-ten --config p/javascript --json --output semgrep-report.json --disable-version-check --metrics off --timeout 120 .
+          rc=$?
+          if [ -f semgrep-report.json ] && [ "$(jq '.results | length' semgrep-report.json 2>/dev/null || echo 0)" -gt 0 ]; then
+            {
+              echo "## Semgrep findings"
+              echo ""
+              echo "| Severity | Rule | File | Line |"
+              echo "| --- | --- | --- | --- |"
+              jq -r '.results[] | "| \(.extra.severity) | \(.check_id) | \(.path) | \(.start.line) |"' semgrep-report.json
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # rc 0 = clean, rc 1 = findings. Neither blocks the build: findings go to
+          # the step summary and get triaged by a human rather than gating merges.
+          # rc >= 2 is Semgrep itself failing (bad config, crash, network) — that is
+          # a broken check reporting a false all-clear, so let it fail loudly.
+          if [ "$rc" -ge 2 ]; then
+            echo "::error::Semgrep exited with $rc — the scan did not complete."
+            exit "$rc"
+          fi
+          exit 0
+      - name: Upload Semgrep report
+        if: always() && hashFiles('semgrep-report.json') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep-report.json
+          if-no-files-found: ignore
