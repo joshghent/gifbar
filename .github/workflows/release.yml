@@ -85,9 +85,20 @@ jobs:
 
       - run: npm ci
 
-      # tauri.release.conf.json turns on createUpdaterArtifacts, which is off
-      # in the base config so CI and Dependabot can build without the signing
-      # key. Updater artifacts require it, so it is enabled only here.
+      # createUpdaterArtifacts is false in the committed config so that CI and
+      # Dependabot can build without the signing key. Updater artifacts need it
+      # on, and only the release build produces them. Patching the file beats
+      # passing --config: the CLI resolves that path relative to the working
+      # directory, which differs from where the config lives, and the mistake
+      # would only ever surface during a real release.
+      - name: Enable updater artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq '.bundle.createUpdaterArtifacts = true' src-tauri/tauri.conf.json > conf.tmp
+          mv conf.tmp src-tauri/tauri.conf.json
+          jq -r '"createUpdaterArtifacts=\(.bundle.createUpdaterArtifacts)"' src-tauri/tauri.conf.json
+
       - name: Build and upload installers
         uses: tauri-apps/tauri-action@v0
         env:
@@ -97,7 +108,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tauriScript: npx tauri
-          args: ${{ matrix.args }} --config tauri.release.conf.json
+          args: ${{ matrix.args }}
           tagName: ${{ needs.release-please.outputs.tag_name }}
           releaseName: GifBar ${{ needs.release-please.outputs.tag_name }}
           releaseDraft: true
