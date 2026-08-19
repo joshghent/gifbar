@@ -1338,6 +1338,7 @@ dependencies = [
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-updater",
  "thiserror 2.0.18",
+ "url",
 ]
 
 [[package]]

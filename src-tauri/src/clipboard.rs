@@ -33,6 +33,33 @@ pub enum ClipboardError {
     Io(#[from] std::io::Error),
     #[error("failed to write to the clipboard: {0}")]
     Clipboard(String),
+    #[error("refusing to download from {0}")]
+    UntrustedUrl(String),
+}
+
+/// Hosts the GIF providers actually serve media from. The URL arrives from the
+/// webview, so without this the command would fetch anything a compromised
+/// page asked it to — including loopback and LAN addresses the app can reach
+/// but the network cannot.
+const ALLOWED_HOST_SUFFIXES: [&str; 4] = ["giphy.com", "tenor.com", "googleapis.com", "gstatic.com"];
+
+fn check_url(url: &str) -> Result<(), ClipboardError> {
+    let parsed =
+        url::Url::parse(url).map_err(|_| ClipboardError::UntrustedUrl(url.to_string()))?;
+    if parsed.scheme() != "https" {
+        return Err(ClipboardError::UntrustedUrl(url.to_string()));
+    }
+    let host = parsed
+        .host_str()
+        .ok_or_else(|| ClipboardError::UntrustedUrl(url.to_string()))?
+        .to_ascii_lowercase();
+    let allowed = ALLOWED_HOST_SUFFIXES
+        .iter()
+        .any(|suffix| host == *suffix || host.ends_with(&format!(".{suffix}")));
+    if !allowed {
+        return Err(ClipboardError::UntrustedUrl(url.to_string()));
+    }
+    Ok(())
 }
 
 impl serde::Serialize for ClipboardError {
@@ -48,6 +75,8 @@ async fn download_to_cache(
     url: &str,
     id: &str,
 ) -> Result<PathBuf, ClipboardError> {
+    check_url(url)?;
+
     let dir = app
         .path()
         .app_cache_dir()
@@ -259,7 +288,28 @@ fn html_snippet(url: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::html_snippet;
+    use super::{check_url, html_snippet};
+
+    #[test]
+    fn accepts_provider_media_hosts() {
+        assert!(check_url("https://media.giphy.com/media/abc/giphy.gif").is_ok());
+        assert!(check_url("https://media1.tenor.com/x/y.gif").is_ok());
+    }
+
+    #[test]
+    fn rejects_plaintext_and_non_provider_hosts() {
+        assert!(check_url("http://media.giphy.com/a.gif").is_err());
+        assert!(check_url("https://evil.test/a.gif").is_err());
+        assert!(check_url("file:///etc/passwd").is_err());
+        assert!(check_url("https://127.0.0.1/a.gif").is_err());
+    }
+
+    #[test]
+    fn rejects_a_host_that_only_suffix_matches_a_provider() {
+        // notgiphy.com ends with "giphy.com" as a substring but is a different
+        // domain, so the check must compare on a label boundary.
+        assert!(check_url("https://notgiphy.com/a.gif").is_err());
+    }
 
     #[test]
     fn escapes_query_separators_in_the_html_flavour() {
