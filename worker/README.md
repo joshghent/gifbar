@@ -48,6 +48,13 @@ deploy under that name the variable is optional.
 
 ## Local development
 
+Put the keys in `worker/.dev.vars` (gitignored — never commit it):
+
+```
+GIPHY_API_KEY=...
+TENOR_API_KEY=...
+```
+
 ```shell
 npx wrangler dev          # serves on http://localhost:8787
 ```
