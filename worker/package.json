@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "hono": "^4.6.14"
+    "hono": "~4.12.34"
   },
   "devDependencies": {
     "vitest": "^4.1.0",
