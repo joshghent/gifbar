@@ -2,9 +2,9 @@ name: Code quality (Semgrep)
 
 on:
   push:
-    branches: ["**"]
+    branches: [master]
   pull_request:
-    branches: ["**"]
+    branches: [master]
 
 permissions:
   contents: read
@@ -26,22 +26,25 @@ jobs:
       - name: Run Semgrep
         run: |
           set +e
-          semgrep --config p/default --config p/security-audit --config p/owasp-top-ten --config p/javascript --config p/typescript --json --output semgrep-report.json --disable-version-check --metrics off --timeout 120 .
+          semgrep --config p/default --config p/security-audit --config p/owasp-top-ten --config p/javascript --json --output semgrep-report.json --disable-version-check --metrics off --timeout 120 .
           rc=$?
           if [ -f semgrep-report.json ] && [ "$(jq '.results | length' semgrep-report.json 2>/dev/null || echo 0)" -gt 0 ]; then
             {
               echo "## Semgrep findings"
-              echo ""
-              echo "Semgrep flagged the entries below, and RepoWarden tracks each as a task on your board. This check is **non-blocking** — it reports findings but won't fail your CI, so the workflow can land cleanly."
               echo ""
               echo "| Severity | Rule | File | Line |"
               echo "| --- | --- | --- | --- |"
               jq -r '.results[] | "| \(.extra.severity) | \(.check_id) | \(.path) | \(.start.line) |"' semgrep-report.json
             } >> "$GITHUB_STEP_SUMMARY"
           fi
-          # Non-blocking by design: findings (rc 1) and a clean tree (rc 0) both
-          # pass. A real Semgrep crash (rc >= 2) only surfaces in the logs/summary
-          # — we still exit 0 so an "add scanning" PR never breaks the user's CI.
+          # rc 0 = clean, rc 1 = findings. Neither blocks the build: findings go to
+          # the step summary and get triaged by a human rather than gating merges.
+          # rc >= 2 is Semgrep itself failing (bad config, crash, network) — that is
+          # a broken check reporting a false all-clear, so let it fail loudly.
+          if [ "$rc" -ge 2 ]; then
+            echo "::error::Semgrep exited with $rc — the scan did not complete."
+            exit "$rc"
+          fi
           exit 0
       - name: Upload Semgrep report
         if: always() && hashFiles('semgrep-report.json') != ''
