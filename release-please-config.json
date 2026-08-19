@@ -15,7 +15,8 @@
           "path": "src-tauri/Cargo.toml",
           "jsonpath": "$.package.version"
         }
-      ]
+      ],
+      "include-component-in-tag": false
     }
   }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "gifbar-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker that proxies GIPHY and Tenor so their API keys never ship inside the desktop app",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.0",
+    "wrangler": "^3.99.0"
+  }
+}

@@ -1,93 +1,31 @@
-const GIPHY_KEY = import.meta.env.VITE_GIPHY_API_KEY;
-const TENOR_KEY = import.meta.env.VITE_TENOR_API_KEY;
+// GIF search goes through a Cloudflare Worker rather than straight to GIPHY
+// and Tenor. Vite inlines env vars at build time, so calling the providers
+// directly meant shipping their API keys inside every .app and .exe, where
+// `strings` recovers them in seconds. The Worker holds the keys as secrets,
+// normalizes both providers, and caches at the edge. See worker/.
+const API_BASE = (
+  import.meta.env.VITE_GIF_API_BASE || "https://gifbar-api.joshghent.workers.dev"
+).replace(/\/$/, "");
 
-const GIPHY_BASE = "https://api.giphy.com/v1/gifs";
-const TENOR_BASE = "https://tenor.googleapis.com/v2";
-
-function normalizeGiphy(gif) {
-  return {
-    id: gif.id,
-    title: gif.title || "",
-    preview: gif.images.fixed_width_small.url,
-    original: gif.images.original.url,
-    source: "giphy",
-  };
-}
-
-function normalizeTenor(gif) {
-  const preview =
-    gif.media_formats?.tinygif?.url || gif.media_formats?.gif?.url || "";
-  const original = gif.media_formats?.gif?.url || preview;
-  return {
-    id: gif.id,
-    title: gif.content_description || "",
-    preview,
-    original,
-    source: "tenor",
-  };
-}
-
-async function fetchGiphy(endpoint, params = {}) {
-  if (!GIPHY_KEY) return [];
-  const url = new URL(`${GIPHY_BASE}/${endpoint}`);
-  url.searchParams.set("api_key", GIPHY_KEY);
-  url.searchParams.set("rating", "g");
+async function fetchGifs(path, params) {
+  const url = new URL(`${API_BASE}${path}`);
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, v);
   }
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const json = await res.json();
-    return (json.data || []).map(normalizeGiphy);
-  } catch {
-    return [];
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`GIF API responded ${res.status}`);
   }
-}
-
-async function fetchTenor(endpoint, params = {}) {
-  if (!TENOR_KEY) return [];
-  const url = new URL(`${TENOR_BASE}/${endpoint}`);
-  url.searchParams.set("key", TENOR_KEY);
-  url.searchParams.set("content_filter", "medium");
-  for (const [k, v] of Object.entries(params)) {
-    url.searchParams.set(k, v);
-  }
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const json = await res.json();
-    return (json.results || []).map(normalizeTenor);
-  } catch {
-    return [];
-  }
-}
-
-function interleave(a, b) {
-  const result = [];
-  const max = Math.max(a.length, b.length);
-  for (let i = 0; i < max; i++) {
-    if (i < a.length) result.push(a[i]);
-    if (i < b.length) result.push(b[i]);
-  }
-  return result;
+  const json = await res.json();
+  return json.gifs || [];
 }
 
 export async function trending(limit = 20) {
-  const half = Math.ceil(limit / 2);
-  const [giphy, tenor] = await Promise.all([
-    fetchGiphy("trending", { limit: half }),
-    fetchTenor("featured", { limit: half }),
-  ]);
-  return interleave(giphy, tenor);
+  return fetchGifs("/trending", { limit });
 }
 
 export async function search(query, limit = 20) {
-  if (!query.trim()) return trending(limit);
-  const half = Math.ceil(limit / 2);
-  const [giphy, tenor] = await Promise.all([
-    fetchGiphy("search", { q: query, limit: half }),
-    fetchTenor("search", { q: query, limit: half }),
-  ]);
-  return interleave(giphy, tenor);
+  const q = query.trim();
+  if (!q) return trending(limit);
+  return fetchGifs("/search", { q, limit });
 }

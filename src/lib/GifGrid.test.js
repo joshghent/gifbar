@@ -1,11 +1,21 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, fireEvent } from "@testing-library/svelte";
+import { invoke } from "@tauri-apps/api/core";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import GifGrid from "./GifGrid.svelte";
 
-// Mock the Tauri clipboard plugin
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: vi.fn(() => Promise.resolve()),
+}));
+
 vi.mock("@tauri-apps/plugin-clipboard-manager", () => ({
   writeText: vi.fn(() => Promise.resolve()),
 }));
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  invoke.mockResolvedValue(undefined);
+});
 
 const mockGifs = [
   {
@@ -49,6 +59,40 @@ describe("GifGrid", () => {
     await vi.waitFor(() => {
       expect(oncopied).toHaveBeenCalledWith("gif-1");
     });
+  });
+
+  it("copies the image itself, not the link", async () => {
+    const { getAllByRole } = render(GifGrid, {
+      props: { gifs: mockGifs, copiedId: null, oncopied: vi.fn() },
+    });
+
+    await fireEvent.click(getAllByRole("button")[0]);
+
+    await vi.waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith("copy_gif", {
+        url: "https://example.com/original/1.gif",
+        id: "gif-1",
+      });
+    });
+    expect(writeText).not.toHaveBeenCalled();
+  });
+
+  it("falls back to copying the URL when the image copy fails", async () => {
+    invoke.mockRejectedValueOnce(new Error("no pasteboard"));
+    const oncopied = vi.fn();
+    const { getAllByRole } = render(GifGrid, {
+      props: { gifs: mockGifs, copiedId: null, oncopied },
+    });
+
+    await fireEvent.click(getAllByRole("button")[0]);
+
+    await vi.waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith(
+        "https://example.com/original/1.gif",
+      );
+    });
+    // The user still gets the "Copied!" confirmation — something did land.
+    expect(oncopied).toHaveBeenCalledWith("gif-1");
   });
 
   it("shows 'Copied!' overlay for the copied GIF", () => {
