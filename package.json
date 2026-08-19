@@ -7,7 +7,7 @@
   "author": "Josh Ghent <me@joshghent.com> (https://joshghent.com)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joshghent/giphy-bar.git"
+    "url": "git+https://github.com/joshghent/gifbar.git"
   },
   "scripts": {
     "dev": "vite",
