@@ -19,6 +19,10 @@ use tauri::Manager;
 /// bad URL cannot exhaust memory.
 const MAX_GIF_BYTES: usize = 64 * 1024 * 1024;
 
+/// How many GIFs to keep on disk. Copying is cheap to repeat, so the cache
+/// exists to avoid re-downloading the same GIF, not to be durable.
+const MAX_CACHED_GIFS: usize = 200;
+
 #[derive(Debug, thiserror::Error)]
 pub enum ClipboardError {
     #[error("failed to download GIF: {0}")]
@@ -92,7 +96,37 @@ async fn download_to_cache(
     std::fs::write(&tmp, &bytes)?;
     std::fs::rename(&tmp, &path)?;
 
+    prune_cache(&dir);
+
     Ok(path)
+}
+
+/// Drops the oldest GIFs once the cache exceeds MAX_CACHED_GIFS. Best effort:
+/// a cache that cannot be tidied is not a reason to fail the copy the user
+/// asked for, so errors here are deliberately ignored.
+fn prune_cache(dir: &Path) {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    let mut files: Vec<(std::time::SystemTime, PathBuf)> = entries
+        .flatten()
+        .filter_map(|e| {
+            let meta = e.metadata().ok()?;
+            if !meta.is_file() {
+                return None;
+            }
+            Some((meta.modified().ok()?, e.path()))
+        })
+        .collect();
+
+    if files.len() <= MAX_CACHED_GIFS {
+        return;
+    }
+
+    files.sort_by_key(|(modified, _)| *modified);
+    for (_, path) in files.iter().take(files.len() - MAX_CACHED_GIFS) {
+        let _ = std::fs::remove_file(path);
+    }
 }
 
 #[tauri::command]
