@@ -79,9 +79,17 @@ function clampLimit(raw) {
 }
 
 // One provider being down or rate-limited should degrade the grid, not empty
-// it — so settle both and keep whichever succeeded.
+// it — so settle both and keep whichever succeeded. Log the ones that failed:
+// silently returning half a grid is indistinguishable from a working service,
+// which is exactly how a bad key goes unnoticed.
 async function gather(tasks) {
+  const names = ["giphy", "tenor"];
   const settled = await Promise.allSettled(tasks);
+  settled.forEach((r, i) => {
+    if (r.status === "rejected") {
+      console.error(`${names[i]} request failed:`, r.reason?.message ?? r.reason);
+    }
+  });
   const [giphy, tenor] = settled.map((r) =>
     r.status === "fulfilled" ? r.value : [],
   );
@@ -96,7 +104,17 @@ function withCache(c, body) {
   return c.json(body);
 }
 
-app.get("/health", (c) => c.json({ ok: true }));
+// Reports which providers have a key configured, so a missing or misnamed
+// secret is visible without reading logs. Booleans only — never key material.
+app.get("/health", (c) =>
+  c.json({
+    ok: true,
+    providers: {
+      giphy: Boolean(c.env.GIPHY_API_KEY),
+      tenor: Boolean(c.env.TENOR_API_KEY),
+    },
+  }),
+);
 
 app.get("/trending", async (c) => {
   const limit = clampLimit(c.req.query("limit"));

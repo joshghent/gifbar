@@ -43,7 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           # Must match the fallback in src/lib/gif-api.js.
-          base="${BASE:-https://gifbar-api.joshghent.workers.dev}"
+          base="${BASE:-https://gifbar-api.ghent.workers.dev}"
           base="${base%/}"
           echo "Checking $base/health"
           code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 20 --retry 3 "$base/health" || echo 000)

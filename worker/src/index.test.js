@@ -138,6 +138,16 @@ describe("gif proxy worker", () => {
     expect(urls.some((u) => u.includes("featured"))).toBe(true);
   });
 
+  it("reports which provider keys are configured on /health", async () => {
+    const res = await app.request("/health", {}, { GIPHY_API_KEY: "giphy-test-key" });
+    const body = await res.json();
+
+    expect(body).toEqual({ ok: true, providers: { giphy: true, tenor: false } });
+    // A missing key must be visible without reading logs — that is the whole
+    // point — but the key itself must never be.
+    expect(JSON.stringify(body)).not.toContain("giphy-test-key");
+  });
+
   it("skips a provider whose key is not configured", async () => {
     bothProvidersOk();
 
