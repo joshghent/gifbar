@@ -25,13 +25,13 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' https://*.giphy.com https://*.tenor.com https://tenor.googleapis.com https://media.tenor.com https://media1.tenor.com; connect-src 'self' https://api.giphy.com https://tenor.googleapis.com https://github.com https://objects.githubusercontent.com; style-src 'self' 'unsafe-inline'"
+      "csp": "default-src 'self'; img-src 'self' data: https://*.giphy.com https://*.tenor.com https://media.tenor.com https://media1.tenor.com; connect-src 'self' https://*.workers.dev https://github.com https://objects.githubusercontent.com; style-src 'self' 'unsafe-inline'"
     }
   },
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/joshghent/giphy-bar/releases/latest/download/latest.json"
+        "https://github.com/joshghent/gifbar/releases/latest/download/latest.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDU5MzdCNzY0MzQ5NDU0QjcKUldTM1ZKUTBaTGMzV2V2NnlkYzFqd3pvbVRyM1dtdzlhUXhVUGVSeFQ3ekNHa1VFWkU4WitlcXAK"
     }
@@ -45,10 +45,17 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "createUpdaterArtifacts": true,
-    "targets": "all",
+    "createUpdaterArtifacts": false,
+    "targets": [
+      "dmg",
+      "app",
+      "deb",
+      "appimage",
+      "nsis"
+    ],
     "macOS": {
-      "minimumSystemVersion": "10.15"
+      "minimumSystemVersion": "10.15",
+      "signingIdentity": "-"
     },
     "windows": {
       "wix": null,

@@ -1,0 +1,15 @@
+name = "gifbar-api"
+main = "src/index.js"
+compatibility_date = "2026-08-19"
+
+# Keys are set as encrypted secrets, never committed and never bundled into
+# the app:
+#   wrangler secret put GIPHY_API_KEY
+#   wrangler secret put TENOR_API_KEY
+#
+# Then point the desktop build at the deployed Worker by setting the
+# VITE_GIF_API_BASE repository variable in GitHub Actions to the
+# workers.dev URL this deploy prints.
+
+[observability]
+enabled = true

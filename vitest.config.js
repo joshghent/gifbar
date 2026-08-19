@@ -11,8 +11,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test-setup.js"],
     env: {
-      VITE_GIPHY_API_KEY: "test-giphy-key",
-      VITE_TENOR_API_KEY: "test-tenor-key",
+      VITE_GIF_API_BASE: "https://gif-api.test",
     },
   },
 });

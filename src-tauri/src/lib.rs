@@ -7,6 +7,8 @@ use tauri::{
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_updater::UpdaterExt;
 
+mod clipboard;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -16,6 +18,7 @@ pub fn run() {
             Some(vec![]),
         ))
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .invoke_handler(tauri::generate_handler![clipboard::copy_gif])
         .setup(|app| {
             // Hide from dock — this is a menu-bar-only app
             #[cfg(target_os = "macos")]

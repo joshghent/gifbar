@@ -1,18 +1,18 @@
 <script>
+  import { invoke } from "@tauri-apps/api/core";
   import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 
   let { gifs, copiedId, oncopied } = $props();
 
+  // Rust downloads the GIF and puts the real image on the clipboard, so
+  // pasting into Teams or Slack gives an animated GIF instead of a link.
+  // If that fails, a URL on the clipboard still beats nothing.
   async function copyGif(gif) {
     try {
-      // Try Tauri clipboard first, fall back to browser API
+      await invoke("copy_gif", { url: gif.original, id: gif.id });
+    } catch (e) {
+      console.error("copying the image failed, falling back to the link", e);
       await writeText(gif.original);
-    } catch {
-      try {
-        await navigator.clipboard.writeText(gif.original);
-      } catch {
-        // silently fail
-      }
     }
     oncopied(gif.id);
   }
@@ -25,7 +25,7 @@
         class="gif-item"
         class:copied={copiedId === gif.id}
         onclick={() => copyGif(gif)}
-        title={gif.title || "Click to copy GIF URL"}
+        title={gif.title || "Click to copy GIF"}
       >
         <img src={gif.preview} alt={gif.title} loading="lazy" />
         {#if copiedId === gif.id}

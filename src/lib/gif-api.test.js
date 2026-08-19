@@ -1,154 +1,91 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Global fetch mock — set up before each test
 beforeEach(() => {
   vi.restoreAllMocks();
 });
 
-function mockFetch(giphyData, tenorData) {
-  let callIndex = 0;
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(() => {
-      const data = callIndex === 0 ? giphyData : tenorData;
-      callIndex++;
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(data),
-      });
-    }),
-  );
-}
-
-const mockGiphyResponse = {
-  data: [
+const workerResponse = {
+  gifs: [
     {
       id: "giphy-1",
       title: "Funny cat",
-      images: {
-        original: { url: "https://giphy.com/original/1.gif" },
-        fixed_width_small: { url: "https://giphy.com/small/1.gif" },
-      },
+      preview: "https://giphy.com/small/1.gif",
+      original: "https://giphy.com/original/1.gif",
+      source: "giphy",
     },
-    {
-      id: "giphy-2",
-      title: "Dancing dog",
-      images: {
-        original: { url: "https://giphy.com/original/2.gif" },
-        fixed_width_small: { url: "https://giphy.com/small/2.gif" },
-      },
-    },
-  ],
-};
-
-const mockTenorResponse = {
-  results: [
     {
       id: "tenor-1",
-      content_description: "Laughing",
-      media_formats: {
-        gif: { url: "https://tenor.com/gif/1.gif" },
-        tinygif: { url: "https://tenor.com/tiny/1.gif" },
-      },
+      title: "Laughing",
+      preview: "https://tenor.com/tiny/1.gif",
+      original: "https://tenor.com/gif/1.gif",
+      source: "tenor",
     },
   ],
 };
 
+function mockFetch(body, ok = true) {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(() => Promise.resolve({ ok, json: () => Promise.resolve(body) })),
+  );
+}
+
 describe("gif-api", () => {
-  describe("trending", () => {
-    it("fetches from both GIPHY and Tenor and interleaves results", async () => {
-      mockFetch(mockGiphyResponse, mockTenorResponse);
-      const { trending } = await import("./gif-api.js");
+  it("requests trending from the worker and returns its gifs", async () => {
+    mockFetch(workerResponse);
+    const { trending } = await import("./gif-api.js");
 
-      const results = await trending(20);
+    const results = await trending(20);
 
-      expect(fetch).toHaveBeenCalledTimes(2);
-      expect(results.length).toBe(3);
-      expect(results[0].id).toBe("giphy-1");
-      expect(results[0].source).toBe("giphy");
-      expect(results[1].id).toBe("tenor-1");
-      expect(results[1].source).toBe("tenor");
-      expect(results[2].id).toBe("giphy-2");
-    });
-
-    it("normalizes GIPHY data correctly", async () => {
-      mockFetch(mockGiphyResponse, { results: [] });
-      const { trending } = await import("./gif-api.js");
-
-      const results = await trending();
-      const gif = results[0];
-
-      expect(gif).toEqual({
-        id: "giphy-1",
-        title: "Funny cat",
-        preview: "https://giphy.com/small/1.gif",
-        original: "https://giphy.com/original/1.gif",
-        source: "giphy",
-      });
-    });
-
-    it("normalizes Tenor data correctly", async () => {
-      mockFetch({ data: [] }, mockTenorResponse);
-      const { trending } = await import("./gif-api.js");
-
-      const results = await trending();
-      const gif = results[0];
-
-      expect(gif).toEqual({
-        id: "tenor-1",
-        title: "Laughing",
-        preview: "https://tenor.com/tiny/1.gif",
-        original: "https://tenor.com/gif/1.gif",
-        source: "tenor",
-      });
-    });
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const url = fetch.mock.calls[0][0].toString();
+    expect(url).toContain("/trending");
+    expect(url).toContain("limit=20");
+    expect(results).toEqual(workerResponse.gifs);
   });
 
-  describe("search", () => {
-    it("passes query parameter to both APIs", async () => {
-      mockFetch(mockGiphyResponse, mockTenorResponse);
-      const { search } = await import("./gif-api.js");
+  it("sends the query to the worker's search endpoint", async () => {
+    mockFetch(workerResponse);
+    const { search } = await import("./gif-api.js");
 
-      await search("cats");
+    await search("cats");
 
-      const calls = fetch.mock.calls;
-      expect(calls[0][0].toString()).toContain("q=cats");
-      expect(calls[1][0].toString()).toContain("q=cats");
-    });
-
-    it("falls back to trending when query is empty", async () => {
-      mockFetch(mockGiphyResponse, mockTenorResponse);
-      const { search } = await import("./gif-api.js");
-
-      const results = await search("  ");
-
-      const calls = fetch.mock.calls;
-      expect(calls[0][0].toString()).toContain("/trending");
-      expect(results.length).toBeGreaterThan(0);
-    });
+    const url = fetch.mock.calls[0][0].toString();
+    expect(url).toContain("/search");
+    expect(url).toContain("q=cats");
   });
 
-  describe("error handling", () => {
-    it("returns empty array when fetch fails", async () => {
-      vi.stubGlobal(
-        "fetch",
-        vi.fn(() => Promise.reject(new Error("Network error"))),
-      );
-      const { trending } = await import("./gif-api.js");
+  it("falls back to trending when the query is only whitespace", async () => {
+    mockFetch(workerResponse);
+    const { search } = await import("./gif-api.js");
 
-      const results = await trending();
-      expect(results).toEqual([]);
-    });
+    await search("   ");
 
-    it("returns empty array when API returns non-ok response", async () => {
-      vi.stubGlobal(
-        "fetch",
-        vi.fn(() => Promise.resolve({ ok: false })),
-      );
-      const { trending } = await import("./gif-api.js");
+    expect(fetch.mock.calls[0][0].toString()).toContain("/trending");
+  });
 
-      const results = await trending();
-      expect(results).toEqual([]);
-    });
+  it("never sends a provider API key — the worker holds those", async () => {
+    mockFetch(workerResponse);
+    const { search } = await import("./gif-api.js");
+
+    await search("cats");
+
+    const url = fetch.mock.calls[0][0].toString();
+    expect(url).not.toContain("api_key");
+    expect(url).not.toMatch(/[?&]key=/);
+  });
+
+  it("tolerates a worker response with no gifs field", async () => {
+    mockFetch({});
+    const { trending } = await import("./gif-api.js");
+
+    expect(await trending()).toEqual([]);
+  });
+
+  it("throws when the worker returns a non-ok response", async () => {
+    mockFetch({}, false);
+    const { trending } = await import("./gif-api.js");
+
+    await expect(trending()).rejects.toThrow(/GIF API responded/);
   });
 });

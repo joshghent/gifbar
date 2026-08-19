@@ -7,18 +7,26 @@
   let gifs = $state([]);
   let loading = $state(true);
   let copiedId = $state(null);
+  let error = $state(null);
 
-  async function loadTrending() {
+  // The API client throws rather than swallowing failures, so the one place
+  // that can actually show the user something is here.
+  async function load(fetcher) {
     loading = true;
-    gifs = await trending();
-    loading = false;
+    error = null;
+    try {
+      gifs = await fetcher();
+    } catch (e) {
+      console.error(e);
+      gifs = [];
+      error = "Couldn't reach the GIF service. Check your connection.";
+    } finally {
+      loading = false;
+    }
   }
 
-  async function handleSearch(query) {
-    loading = true;
-    gifs = await search(query);
-    loading = false;
-  }
+  const loadTrending = () => load(() => trending());
+  const handleSearch = (query) => load(() => search(query));
 
   function handleCopied(id) {
     copiedId = id;
@@ -35,6 +43,8 @@
 
   {#if loading}
     <Spinner />
+  {:else if error}
+    <div class="empty error">{error}</div>
   {:else if gifs.length === 0}
     <div class="empty">No GIFs found. Try a different search!</div>
   {:else}
@@ -62,6 +72,12 @@
     justify-content: center;
     color: #888;
     font-size: 14px;
+  }
+
+  .error {
+    color: #ff8a80;
+    padding: 0 16px;
+    text-align: center;
   }
 
   .attribution {
