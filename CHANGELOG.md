@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.1.0](https://github.com/joshghent/gifbar/compare/v2.0.1...v2.1.0) (2026-08-19)
+
+
+### Features
+
+* ship real installers, proxy the GIF APIs, copy the image itself ([#271](https://github.com/joshghent/gifbar/issues/271)) ([6851cbe](https://github.com/joshghent/gifbar/commit/6851cbe47e17dae27c62975692512c797507dd99))
+
+
+### Bug Fixes
+
+* **ci:** gate release-please on the preflight, not the other way round ([#277](https://github.com/joshghent/gifbar/issues/277)) ([f91de33](https://github.com/joshghent/gifbar/commit/f91de334b1591e065afb9681608ea9443991df45))
+* correct the worker URL and make provider keys visible ([#280](https://github.com/joshghent/gifbar/issues/280)) ([22d6d3b](https://github.com/joshghent/gifbar/commit/22d6d3b647b565f48eb66ad4c09c171e64684853))
+* **security:** patch 11 packages against 18 vulnerabilities (8 via override) ([#268](https://github.com/joshghent/gifbar/issues/268)) ([ca30ccf](https://github.com/joshghent/gifbar/commit/ca30ccfbf1c6e0b7921492648e76261d41835e0b))
+* **security:** patch 3 packages against 18 vulnerabilities (2 via override) ([#278](https://github.com/joshghent/gifbar/issues/278)) ([2e9a228](https://github.com/joshghent/gifbar/commit/2e9a2282fdd7fed99d5f9bd17a75bd1313ba33b9))
+
 ## [2.0.1](https://github.com/joshghent/gifbar/compare/gifbar-v2.0.0...gifbar-v2.0.1) (2026-03-30)
 
 
