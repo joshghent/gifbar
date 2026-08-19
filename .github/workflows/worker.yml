@@ -51,16 +51,25 @@ jobs:
           BASE: ${{ vars.VITE_GIF_API_BASE }}
         run: |
           set -euo pipefail
-          base="${BASE:-https://gifbar-api.joshghent.workers.dev}"
+          base="${BASE:-https://gifbar-api.ghent.workers.dev}"
           base="${base%/}"
-          curl -fsS --retry 5 --retry-all-errors --max-time 20 "$base/health"
-          echo
 
-          # /health passes with no keys configured — a provider without a key is
-          # skipped rather than erroring — so check that GIFs actually come back.
+          health=$(curl -fsS --retry 5 --retry-all-errors --max-time 20 "$base/health")
+          echo "health: $health"
+
+          # /health reports a boolean per provider, so a missing or misnamed
+          # secret is visible here rather than only as a thinner grid.
+          for provider in giphy tenor; do
+            if [ "$(echo "$health" | jq -r ".providers.$provider")" != "true" ]; then
+              echo "::warning::No ${provider} key configured — that provider will be skipped. Set it in the Cloudflare dashboard under the worker's Settings → Variables and Secrets."
+            fi
+          done
+
+          # A provider with no key is skipped rather than erroring, so /health
+          # alone returns ok on a worker that cannot serve a single GIF.
           count=$(curl -fsS --max-time 20 "$base/trending?limit=4" | jq '.gifs | length')
           echo "trending returned $count gifs"
           if [ "$count" -eq 0 ]; then
-            echo "::error::Worker is up but returned no GIFs. Set the provider keys: cd worker && npx wrangler secret put GIPHY_API_KEY (and TENOR_API_KEY)."
+            echo "::error::Worker is up but returned no GIFs — neither provider key is working."
             exit 1
           fi

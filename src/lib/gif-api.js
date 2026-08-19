@@ -4,7 +4,7 @@
 // `strings` recovers them in seconds. The Worker holds the keys as secrets,
 // normalizes both providers, and caches at the edge. See worker/.
 const API_BASE = (
-  import.meta.env.VITE_GIF_API_BASE || "https://gifbar-api.joshghent.workers.dev"
+  import.meta.env.VITE_GIF_API_BASE || "https://gifbar-api.ghent.workers.dev"
 ).replace(/\/$/, "");
 
 async function fetchGifs(path, params) {

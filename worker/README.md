@@ -65,7 +65,7 @@ Secrets apply immediately — no redeploy needed.
 
 ### Which URL
 
-The app falls back to `https://gifbar-api.joshghent.workers.dev`, so if the
+The app falls back to `https://gifbar-api.ghent.workers.dev`, so if the
 worker deploys under that name nothing else is needed. If it lands elsewhere,
 set the `VITE_GIF_API_BASE` **repository variable** to the deployed URL.
 
