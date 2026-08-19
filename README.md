@@ -68,18 +68,8 @@ which holds the keys as encrypted secrets and normalizes both providers into one
 response shape. The desktop app only ever talks to that Worker. A leaked or
 rate-limited key can be rotated with `wrangler secret put` — no new release.
 
-To deploy your own:
-
-```shell
-cd worker
-npm install
-npx wrangler secret put GIPHY_API_KEY
-npx wrangler secret put TENOR_API_KEY
-npx wrangler deploy
-```
-
-Then set the `VITE_GIF_API_BASE` repository variable in GitHub Actions to the
-URL that `wrangler deploy` prints.
+The Worker deploys from CI — see [`worker/README.md`](./worker/README.md) for
+the one secret it needs and how to set the provider keys.
 
 ## Development
 
@@ -127,7 +117,8 @@ Required GitHub Actions configuration:
 | --- | --- | --- |
 | `TAURI_SIGNING_PRIVATE_KEY` | secret | signs updater artifacts (`npx tauri signer generate`) |
 | `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | secret | password for the above |
-| `VITE_GIF_API_BASE` | variable | URL of the deployed GIF proxy Worker |
+| `CLOUDFLARE_API_TOKEN` | secret | deploys the GIF proxy Worker |
+| `VITE_GIF_API_BASE` | variable | URL of the Worker — only if it is not the default |
 
 Note that CI itself needs **no** secrets, which is what keeps Dependabot's
 builds green — Dependabot events get an empty secrets context.

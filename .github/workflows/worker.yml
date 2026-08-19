@@ -1,0 +1,66 @@
+name: Deploy worker
+
+# Deploys the GIF proxy (worker/) to Cloudflare.
+#
+# Only the code deploys from here. The GIPHY and Tenor keys are set once with
+# `wrangler secret put` and live solely in Cloudflare — mirroring them into
+# GitHub secrets would widen the blast radius for keys that change maybe once
+# a year, and the whole point of the worker is to shrink where they exist.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "worker/**"
+      - ".github/workflows/worker.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - run: npm ci
+        working-directory: worker
+
+      # The release pipeline gates on this worker being healthy, so a broken
+      # deploy blocks releases. Cheap to run the tests first.
+      - run: npm test
+        working-directory: worker
+
+      # Uses the wrangler pinned in worker/package-lock.json rather than a
+      # floating one from an action, so CI deploys the version tested above.
+      - run: npx wrangler deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Verify the deployed worker answers
+        env:
+          BASE: ${{ vars.VITE_GIF_API_BASE }}
+        run: |
+          set -euo pipefail
+          base="${BASE:-https://gifbar-api.joshghent.workers.dev}"
+          base="${base%/}"
+          curl -fsS --retry 5 --retry-all-errors --max-time 20 "$base/health"
+          echo
+
+          # /health passes with no keys configured — a provider without a key is
+          # skipped rather than erroring — so check that GIFs actually come back.
+          count=$(curl -fsS --max-time 20 "$base/trending?limit=4" | jq '.gifs | length')
+          echo "trending returned $count gifs"
+          if [ "$count" -eq 0 ]; then
+            echo "::error::Worker is up but returned no GIFs. Set the provider keys: cd worker && npx wrangler secret put GIPHY_API_KEY (and TENOR_API_KEY)."
+            exit 1
+          fi
