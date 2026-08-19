@@ -24,7 +24,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Runs before release-please, not after. release-please creates the tag and
+  # the draft release as part of its own step, so a check that runs later
+  # cannot prevent a bad release — it can only strand a burned version number
+  # behind a draft that never gets assets.
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GIF proxy worker is reachable
+        env:
+          BASE: ${{ vars.VITE_GIF_API_BASE }}
+        run: |
+          set -euo pipefail
+          # Must match the fallback in src/lib/gif-api.js.
+          base="${BASE:-https://gifbar-api.joshghent.workers.dev}"
+          base="${base%/}"
+          echo "Checking $base/health"
+          code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 20 --retry 3 "$base/health" || echo 000)
+          if [ "$code" != "200" ]; then
+            echo "::error::$base/health returned $code. Deploy the worker (see worker/README.md) and set the VITE_GIF_API_BASE repository variable before releasing."
+            exit 1
+          fi
+
   release-please:
+    needs: preflight
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -39,31 +62,8 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-  # An installer whose GIF backend is unreachable looks like a broken app to
-  # every user who downloads it, and a published release cannot be taken back
-  # cleanly. Verify the worker answers before spending 20 minutes building.
-  preflight:
-    needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: GIF proxy worker is reachable
-        env:
-          BASE: ${{ vars.VITE_GIF_API_BASE }}
-        run: |
-          set -euo pipefail
-          # Must match the fallback in src/lib/gif-api.js.
-          base="${BASE:-https://gifbar-api.joshghent.workers.dev}"
-          base="${base%/}"
-          echo "Checking $base/health"
-          code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 20 --retry 3 "$base/health" || echo 000)
-          if [ "$code" != "200" ]; then
-            echo "::error::$base/health returned $code. Deploy the worker (see worker/README) and set the VITE_GIF_API_BASE repository variable before releasing."
-            exit 1
-          fi
-
   build:
-    needs: [release-please, preflight]
+    needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
     strategy:
       fail-fast: false
