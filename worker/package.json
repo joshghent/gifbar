@@ -10,10 +10,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "hono": "^4.12.34"
+    "hono": "~4.13.5"
   },
   "devDependencies": {
-    "vitest": "^4.1.0",
+    "vitest": "~4.1.11",
     "wrangler": "^4.124.0"
   }
 }
