@@ -1,5 +1,50 @@
 # Changelog
 
+## [2.2.0](https://github.com/joshghent/gifbar/compare/v2.1.0...v2.2.0) (2026-10-22)
+
+
+### Features
+
+* ship real installers, proxy the GIF APIs, copy the image itself ([#271](https://github.com/joshghent/gifbar/issues/271)) ([6851cbe](https://github.com/joshghent/gifbar/commit/6851cbe47e17dae27c62975692512c797507dd99))
+
+
+### Bug Fixes
+
+* **ci:** gate release-please on the preflight, not the other way round ([#277](https://github.com/joshghent/gifbar/issues/277)) ([f91de33](https://github.com/joshghent/gifbar/commit/f91de334b1591e065afb9681608ea9443991df45))
+* correct the worker URL and make provider keys visible ([#280](https://github.com/joshghent/gifbar/issues/280)) ([22d6d3b](https://github.com/joshghent/gifbar/commit/22d6d3b647b565f48eb66ad4c09c171e64684853))
+* package.json & yarn.lock to reduce vulnerabilities ([1af9129](https://github.com/joshghent/gifbar/commit/1af91299a06e38e2ee400c8d8898141d9a419056))
+* **package:** update concurrently to version 4.1.0 ([3895e47](https://github.com/joshghent/gifbar/commit/3895e47200e5f6489b236e2534decb437f24dac5))
+* **package:** update concurrently to version 5.0.1 ([4314a01](https://github.com/joshghent/gifbar/commit/4314a010c58947c2127b896f4d1025efc8fc76f1))
+* **package:** update concurrently to version 5.0.2 ([a1d7c59](https://github.com/joshghent/gifbar/commit/a1d7c5985359bf0e2f33dc2498b915de092411be))
+* **package:** update concurrently to version 5.1.0 ([3be852a](https://github.com/joshghent/gifbar/commit/3be852a21fc8de56f1fffe08ae59f93be944bbb4))
+* **package:** update concurrently to version 5.2.0 ([8ad4e38](https://github.com/joshghent/gifbar/commit/8ad4e3898108ce775a389ef611b5db3676f4b596))
+* **package:** update dotenv to version 8.2.0 ([f233b82](https://github.com/joshghent/gifbar/commit/f233b82d9e1f133726db595d7fce7edb3aaaf13c))
+* **package:** update giphy-api to version 1.2.8 ([5a6323b](https://github.com/joshghent/gifbar/commit/5a6323b7c7b5f1e83ffc4c7dc69724b27540fa23))
+* **package:** update giphy-api to version 2.0.1 ([cc2a1e7](https://github.com/joshghent/gifbar/commit/cc2a1e795ac968ba82e274d1896b65468f7501be))
+* **package:** update menubar to version 7.1.0 ([e1611d6](https://github.com/joshghent/gifbar/commit/e1611d68ac8cd03ef9729c375ea296d4a3ab347c))
+* **package:** update menubar to version 8.0.0 ([9355a36](https://github.com/joshghent/gifbar/commit/9355a361abd9071844c56be9410c573d3fb98fd0))
+* **package:** update menubar to version 9.0.0 ([d3c8cb4](https://github.com/joshghent/gifbar/commit/d3c8cb403db9d1c8a5cdb326a1914aaa0bde1716))
+* **package:** update react to version 16.11.0 ([a0f83e9](https://github.com/joshghent/gifbar/commit/a0f83e99ce94c39969dc33612d86a97e5afcf165))
+* **package:** update react to version 16.12.0 ([d12f682](https://github.com/joshghent/gifbar/commit/d12f682338af8abe5c5b619ff4e34c9e440630ac))
+* **package:** update react to version 16.13.0 ([c4516a1](https://github.com/joshghent/gifbar/commit/c4516a1f3074b95013b29e8a60801818933db25a))
+* **package:** update react to version 16.13.1 ([7ce0b49](https://github.com/joshghent/gifbar/commit/7ce0b499f163de816a4ea5873f12074d1dbd1f54))
+* **package:** update react to version 16.7.0 ([de10f88](https://github.com/joshghent/gifbar/commit/de10f88563740d299d39623286e9e33583505985))
+* **package:** update react to version 16.8.2 ([69ea4e3](https://github.com/joshghent/gifbar/commit/69ea4e371d5a24f0a23a44a1bf4b0c99f69c98c2))
+* **package:** update react to version 16.8.3 ([a9b8082](https://github.com/joshghent/gifbar/commit/a9b8082506d10ed2f53f2aecc4a029ba27ff0759))
+* **package:** update react-copy-to-clipboard to version 5.0.2 ([e1e47e4](https://github.com/joshghent/gifbar/commit/e1e47e4d219fa1ae923da7b60a9076d255376479))
+* **package:** update react-dom to version 16.11.0 ([e0ace92](https://github.com/joshghent/gifbar/commit/e0ace924d82117dddfd33cf75817df82fb2185bd))
+* **package:** update react-dom to version 16.12.0 ([af9ce49](https://github.com/joshghent/gifbar/commit/af9ce49b43666cf9dfb6c3d303b70e1b02529f0a))
+* **package:** update react-dom to version 16.13.0 ([fe9c7c2](https://github.com/joshghent/gifbar/commit/fe9c7c200e2d5e0a360e36d1fc6fb35fc1a9f02c))
+* **package:** update react-dom to version 16.13.1 ([81e335c](https://github.com/joshghent/gifbar/commit/81e335cd3e79075cf84928def94a9cd911ad13ae))
+* **package:** update react-dom to version 16.7.0 ([64d7ca8](https://github.com/joshghent/gifbar/commit/64d7ca8900ca5ffa702a2769f4fb3a5bd9e5f8d5))
+* **package:** update react-dom to version 16.8.2 ([48cc17c](https://github.com/joshghent/gifbar/commit/48cc17cab1c638e22fb9c882e7f19dd546ff66ba))
+* **package:** update react-dom to version 16.8.3 ([98e2920](https://github.com/joshghent/gifbar/commit/98e2920d76b1d69f4d6411377865819c2b8441fd))
+* **security:** bump vite to clear the open high advisories ([#301](https://github.com/joshghent/gifbar/issues/301)) ([7683501](https://github.com/joshghent/gifbar/commit/76835015418c2449b0e4671f92cda16565eedc61))
+* **security:** patch 11 packages against 18 vulnerabilities (8 via override) ([#268](https://github.com/joshghent/gifbar/issues/268)) ([ca30ccf](https://github.com/joshghent/gifbar/commit/ca30ccfbf1c6e0b7921492648e76261d41835e0b))
+* **security:** patch 3 packages against 18 vulnerabilities (2 via override) ([#278](https://github.com/joshghent/gifbar/issues/278)) ([2e9a228](https://github.com/joshghent/gifbar/commit/2e9a2282fdd7fed99d5f9bd17a75bd1313ba33b9))
+* **security:** patch devalue, nanoid, sharp, undici, hono and vitest ([#295](https://github.com/joshghent/gifbar/issues/295)) ([1a029bc](https://github.com/joshghent/gifbar/commit/1a029bc6fade65984af859c04a94a5745030c9ab))
+* update react files to use jsx extension ([1acd21e](https://github.com/joshghent/gifbar/commit/1acd21ee13ef2d4fd01921ed159e18510de6fb7e))
+
 ## [2.1.0](https://github.com/joshghent/gifbar/compare/v2.0.1...v2.1.0) (2026-10-20)
 
 
