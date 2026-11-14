@@ -62,6 +62,60 @@ fn check_url(url: &str) -> Result<(), ClipboardError> {
     Ok(())
 }
 
+/// The allowlist only means something if it also holds after redirects:
+/// reqwest's default policy follows up to ten hops to any host, so a URL that
+/// passes `check_url` could still land on loopback or the LAN. Re-check every
+/// hop and stop (surfacing the 3xx as an error) when one leaves the allowlist.
+fn http_client() -> Result<reqwest::Client, ClipboardError> {
+    reqwest::Client::builder()
+        .redirect(reqwest::redirect::Policy::custom(|attempt| {
+            if attempt.previous().len() >= 5 || check_url(attempt.url().as_str()).is_err() {
+                attempt.stop()
+            } else {
+                attempt.follow()
+            }
+        }))
+        .build()
+        .map_err(|e| ClipboardError::Download(e.to_string()))
+}
+
+/// Downloads `url`, giving up as soon as the body passes `max` bytes rather
+/// than buffering the whole response first and checking afterwards.
+async fn fetch_capped(
+    client: &reqwest::Client,
+    url: &str,
+    max: usize,
+) -> Result<Vec<u8>, ClipboardError> {
+    let mut res = client
+        .get(url)
+        .send()
+        .await
+        .map_err(|e| ClipboardError::Download(e.to_string()))?;
+    if !res.status().is_success() {
+        return Err(ClipboardError::Download(format!(
+            "provider responded {}",
+            res.status()
+        )));
+    }
+    if let Some(len) = res.content_length() {
+        if len > max as u64 {
+            return Err(ClipboardError::TooLarge(len as usize));
+        }
+    }
+    let mut bytes = Vec::new();
+    while let Some(chunk) = res
+        .chunk()
+        .await
+        .map_err(|e| ClipboardError::Download(e.to_string()))?
+    {
+        if bytes.len() + chunk.len() > max {
+            return Err(ClipboardError::TooLarge(bytes.len() + chunk.len()));
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    Ok(bytes)
+}
+
 impl serde::Serialize for ClipboardError {
     fn serialize<S: serde::Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
         s.serialize_str(&self.to_string())
@@ -102,22 +156,7 @@ async fn download_to_cache(
         return Ok(path);
     }
 
-    let res = reqwest::get(url)
-        .await
-        .map_err(|e| ClipboardError::Download(e.to_string()))?;
-    if !res.status().is_success() {
-        return Err(ClipboardError::Download(format!(
-            "provider responded {}",
-            res.status()
-        )));
-    }
-    let bytes = res
-        .bytes()
-        .await
-        .map_err(|e| ClipboardError::Download(e.to_string()))?;
-    if bytes.len() > MAX_GIF_BYTES {
-        return Err(ClipboardError::TooLarge(bytes.len()));
-    }
+    let bytes = fetch_capped(&http_client()?, url, MAX_GIF_BYTES).await?;
 
     // Write to a temp name then rename, so a cancelled download can never
     // leave a truncated file that later copies would happily reuse.
@@ -288,7 +327,57 @@ fn html_snippet(url: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{check_url, html_snippet};
+    use super::{check_url, fetch_capped, html_snippet, http_client, ClipboardError};
+    use std::io::{Read, Write};
+    use std::net::TcpListener;
+
+    /// Serves one canned HTTP response per connection on a loopback port.
+    fn serve(responses: Vec<String>) -> String {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let addr = listener.local_addr().unwrap();
+        std::thread::spawn(move || {
+            for (stream, body) in listener.incoming().zip(responses) {
+                let mut stream = stream.unwrap();
+                let mut buf = [0u8; 4096];
+                let _ = stream.read(&mut buf);
+                let _ = stream.write_all(body.as_bytes());
+            }
+        });
+        format!("http://{addr}")
+    }
+
+    #[test]
+    fn does_not_follow_a_redirect_off_the_allowlist() {
+        // A redirect to loopback must not be followed even though the first
+        // request was allowed through.
+        let base = serve(vec![format!(
+            "HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1:1/secret\r\nContent-Length: 0\r\n\r\n"
+        )]);
+        let result = tauri::async_runtime::block_on(fetch_capped(
+            &http_client().unwrap(),
+            &format!("{base}/a.gif"),
+            1024,
+        ));
+        match result {
+            Err(ClipboardError::Download(msg)) => assert!(msg.contains("302"), "{msg}"),
+            other => panic!("expected the 302 to surface as an error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn stops_reading_once_the_body_passes_the_cap() {
+        // No Content-Length, so the cap has to be enforced while streaming.
+        let body = "x".repeat(10_000);
+        let base = serve(vec![format!(
+            "HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n{body}"
+        )]);
+        let result = tauri::async_runtime::block_on(fetch_capped(
+            &http_client().unwrap(),
+            &format!("{base}/big.gif"),
+            1024,
+        ));
+        assert!(matches!(result, Err(ClipboardError::TooLarge(_))), "{result:?}");
+    }
 
     #[test]
     fn accepts_provider_media_hosts() {
