@@ -15,6 +15,7 @@ name: Release
 on:
   push:
     branches: [master]
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -24,56 +25,39 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Runs before release-please, not after. release-please creates the tag and
-  # the draft release as part of its own step, so a check that runs later
-  # cannot prevent a bad release — it can only strand a burned version number
-  # behind a draft that never gets assets.
-  #
-  # Only on the commit that merges a release PR. release-please cuts a release
-  # exactly then, so gating every master push instead would fail ordinary
-  # commits over a backend they do not ship, and stop release-please from
-  # maintaining its PR at all.
-  preflight:
-    if: "startsWith(github.event.head_commit.message, 'chore(master): release')"
-    runs-on: ubuntu-latest
-    steps:
-      - name: GIF proxy worker is reachable
-        env:
-          BASE: ${{ vars.VITE_GIF_API_BASE }}
-        run: |
-          set -euo pipefail
-          # Must match the fallback in src/lib/gif-api.js.
-          base="${BASE:-https://gifbar-api.ghent.workers.dev}"
-          base="${base%/}"
-          echo "Checking $base/health"
-          code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 20 --retry 3 "$base/health" || echo 000)
-          if [ "$code" != "200" ]; then
-            echo "::error::$base/health returned $code. Deploy the worker (see worker/README.md) and set the VITE_GIF_API_BASE repository variable before releasing."
-            exit 1
-          fi
-
   release-please:
-    needs: preflight
-    # preflight is skipped on ordinary commits; a skipped dependency would
-    # otherwise skip this job too. Run unless preflight actually failed.
-    if: always() && needs.preflight.result != 'failure' && needs.preflight.result != 'cancelled'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      release_id: ${{ steps.draft.outputs.id || steps.release.outputs.id }}
+      tag_name: ${{ steps.draft.outputs.tag_name || steps.release.outputs.tag_name }}
+      release_sha: ${{ steps.draft.outputs.sha || steps.release.outputs.sha }}
     steps:
+      - uses: actions/checkout@v4
+
+      # Draft releases have no published tag yet. Reuse the current version's
+      # draft on retries instead of relying on release_created (a one-time event).
+      - name: Find unfinished release
+        uses: actions/github-script@v7
+        id: draft
+        with:
+          script: |
+            const findDraft = require('./.github/scripts/find-release-draft.cjs');
+            await findDraft({ github, context, core });
+
       - uses: googleapis/release-please-action@v4
+        if: steps.draft.outputs.id == ''
         id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          skip-github-pull-request: true
 
   build:
     needs: release-please
-    if: needs.release-please.outputs.release_created == 'true'
+    if: needs.release-please.outputs.release_id != ''
     strategy:
       fail-fast: false
       matrix:
@@ -94,7 +78,25 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: GIF proxy worker is reachable
+        shell: bash
+        env:
+          BASE: ${{ vars.VITE_GIF_API_BASE }}
+        run: |
+          set -euo pipefail
+          # Must match the fallback in src/lib/gif-api.js.
+          base="${BASE:-https://gifbar-api.ghent.workers.dev}"
+          base="${base%/}"
+          echo "Checking $base/health"
+          code=$(curl -fsS -o /dev/null -w '%{http_code}' --max-time 20 --retry 3 "$base/health" || echo 000)
+          if [ "$code" != "200" ]; then
+            echo "::error::$base/health returned $code. Deploy the worker (see worker/README.md) and set the VITE_GIF_API_BASE repository variable before releasing."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.release_sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -141,14 +143,16 @@ jobs:
         with:
           tauriScript: npx tauri
           args: ${{ matrix.args }}
+          releaseId: ${{ needs.release-please.outputs.release_id }}
           tagName: ${{ needs.release-please.outputs.tag_name }}
+          retryAttempts: 3
           releaseName: GifBar ${{ needs.release-please.outputs.tag_name }}
           releaseDraft: true
           includeUpdaterJson: true
 
   publish:
     needs: [release-please, build]
-    if: needs.release-please.outputs.release_created == 'true'
+    if: needs.release-please.outputs.release_id != ''
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -179,3 +183,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: gh release edit "${{ needs.release-please.outputs.tag_name }}" --draft=false --latest
+
+  release-pr:
+    needs: [release-please, publish]
+    # A draft has no published tag for release-please to use as its baseline.
+    # Do not propose the next version until the current one is published.
+    if: >-
+      !cancelled() && needs.release-please.result == 'success' &&
+      (needs.publish.result == 'success' || needs.release-please.outputs.release_id == '')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          skip-github-release: true
