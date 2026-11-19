@@ -120,6 +120,13 @@ from conventional commits — you never tag by hand.
 The draft step matters: a published GitHub release is immutable, so assets have
 to land before it goes live.
 
+If a release build fails, use **Actions → Release → Run workflow** on `master`
+or rerun the failed jobs. The workflow resumes the draft for the version in
+`.release-please-manifest.json`, builds its original commit, and uploads to the
+same release ID. A subsequent push also resumes that draft. The next release PR
+is only generated after publication succeeds, so a failed upload does not require
+another version bump. Older abandoned drafts are not automatically published.
+
 Required GitHub Actions configuration:
 
 | Name | Kind | Purpose |
