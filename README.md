@@ -30,6 +30,15 @@
 
 Grab the installer for your platform from the [latest release](https://github.com/joshghent/gifbar/releases/latest).
 
+### Linux
+
+Download the `.deb` (Debian/Ubuntu) or `.AppImage` (other distributions) from
+the release's **Assets** section. Linux builds are for x86_64 / amd64.
+
+For Debian/Ubuntu, install the downloaded package with `sudo apt install ./GifBar_*_amd64.deb`.
+For AppImage, make the downloaded file executable with
+`chmod +x GifBar_*_amd64.AppImage`, then launch it from your file manager.
+
 ### macOS: first launch
 
 The app is **not signed with an Apple Developer ID**, so Gatekeeper blocks it on
