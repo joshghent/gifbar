@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/piccolecose/gifbar/compare/v2.3.0...v2.3.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* **ci:** resume draft releases before opening the next release PR ([#312](https://github.com/piccolecose/gifbar/issues/312)) ([123bfc9](https://github.com/piccolecose/gifbar/commit/123bfc9170554ab4db0b5aa3ee1c372dcd9f70cd))
+
 ## [2.3.0](https://github.com/piccolecose/gifbar/compare/v2.2.0...v2.3.0) (2026-11-19)
 
 
